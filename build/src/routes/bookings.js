@@ -9,10 +9,6 @@ const bookingsRouter = express_1.default.Router();
 //Booking routes//
 bookingsRouter.get('/bookings', bookings_1.getBookings);
 bookingsRouter.post("/bookings", bookings_1.postBookings);
-bookingsRouter.put("/booking", (_req, res) => {
-    res.send("Booking updated");
-});
-bookingsRouter.delete("/booking", (_req, res) => {
-    res.send("Booking deleted");
-});
+bookingsRouter.put("/booking/:id", bookings_1.putBooking);
+bookingsRouter.delete("/booking/:id", bookings_1.deleteBooking);
 exports.default = bookingsRouter;

@@ -1,5 +1,6 @@
 import express, {Response, Request} from 'express'
 import bookingsRouter from "./routes/bookings";
+import roomsRouter from './routes/rooms';
 
 const app = express()
 
@@ -11,6 +12,7 @@ app.get('/', (req: Request, res: Response) => {
 })
 
 app.use(bookingsRouter);
+app.use(roomsRouter);
 
 app.listen(PORT, () => {
 	console.log(`Server running on port: ${PORT}`)
