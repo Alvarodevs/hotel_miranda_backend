@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const bookings_1 = __importDefault(require("./routes/bookings"));
 const rooms_1 = __importDefault(require("./routes/rooms"));
+const users_1 = __importDefault(require("./routes/users"));
+const contacts_1 = __importDefault(require("./routes/contacts"));
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 const PORT = 3001;
@@ -14,6 +16,8 @@ app.get('/', (req, res) => {
 });
 app.use(bookings_1.default);
 app.use(rooms_1.default);
+app.use(users_1.default);
+app.use(contacts_1.default);
 app.listen(PORT, () => {
     console.log(`Server running on port: ${PORT}`);
 });

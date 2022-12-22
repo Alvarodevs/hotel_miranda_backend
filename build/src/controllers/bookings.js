@@ -1,10 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteBooking = exports.putBooking = exports.postBookings = exports.getBookings = void 0;
+exports.deleteBooking = exports.putBooking = exports.postBookings = exports.getBooking = exports.getBookings = void 0;
 const getBookings = (req, res) => {
     res.send("Bookings fetched");
 };
 exports.getBookings = getBookings;
+const getBooking = (req, res) => {
+    const { id } = req.params;
+    res.send(`Booking ${id} fetched`);
+};
+exports.getBooking = getBooking;
 const postBookings = (req, res) => {
     const { data } = req.body;
     console.log(data);

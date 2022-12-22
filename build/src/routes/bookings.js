@@ -7,7 +7,8 @@ const express_1 = __importDefault(require("express"));
 const bookings_1 = require("../controllers/bookings");
 const bookingsRouter = express_1.default.Router();
 //Booking routes//
-bookingsRouter.get('/bookings', bookings_1.getBookings);
+bookingsRouter.get("/bookings", bookings_1.getBookings);
+bookingsRouter.get("/booking/:id", bookings_1.getBooking);
 bookingsRouter.post("/bookings", bookings_1.postBookings);
 bookingsRouter.put("/booking/:id", bookings_1.putBooking);
 bookingsRouter.delete("/booking/:id", bookings_1.deleteBooking);

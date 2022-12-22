@@ -1,10 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteRoom = exports.putRoom = exports.postRooms = exports.getRooms = void 0;
+exports.deleteRoom = exports.putRoom = exports.postRooms = exports.getRoom = exports.getRooms = void 0;
 const getRooms = (req, res) => {
     res.send("Rooms fetched");
 };
 exports.getRooms = getRooms;
+const getRoom = (req, res) => {
+    const { id } = req.params;
+    res.send(`Room ${id} fetched`);
+};
+exports.getRoom = getRoom;
 const postRooms = (req, res) => {
     const { data } = req.body;
     console.log(data);

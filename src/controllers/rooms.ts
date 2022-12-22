@@ -4,6 +4,11 @@ export const getRooms = (req: Request, res: Response) => {
 	res.send("Rooms fetched")
 }
 
+export const getRoom = (req: Request, res: Response) => {
+	const {id} = req.params
+   res.send(`Room ${id} fetched`);
+};
+
 export const postRooms = (req: Request, res: Response) => {
    const {data} = req.body
 	console.log(data)
