@@ -3,7 +3,7 @@ import passport from "passport";
 import jwt from "jsonwebtoken";
 
 export const postLogin = (req: Request, res: Response, next: NextFunction) => {
-   passport.authenticate("login", (err, user) => {
+   passport.authenticate("login", (err, user, info) => {
 		try {
 			if(!user || err) {
 				return next(new Error("Something went wrong"))
@@ -11,7 +11,7 @@ export const postLogin = (req: Request, res: Response, next: NextFunction) => {
 			req.login(
 				user, 
 				{session: false}, 
-				error => error ? next(error) : res.json(jwt.sign({user:{id: user.id, email: user.email}}, "TOP_SECRET"))
+				error => error ? next(error) : res.json(jwt.sign({user:{id: user.id, email: user.email}}, "key"))
 			)
 		} catch (error) {
 			return next(error);

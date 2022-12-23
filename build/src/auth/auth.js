@@ -31,7 +31,7 @@ passport_1.default.use("login", new localStrategy({
 }));
 //With JWT
 passport_1.default.use(new JWTStrategy({
-    secretOrKey: "TOP_SECRET",
+    secretOrKey: "key",
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
 }, (token, done) => {
     try {

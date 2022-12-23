@@ -7,12 +7,12 @@ exports.postLogin = void 0;
 const passport_1 = __importDefault(require("passport"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const postLogin = (req, res, next) => {
-    passport_1.default.authenticate("login", (err, user) => {
+    passport_1.default.authenticate("login", (err, user, info) => {
         try {
             if (!user || err) {
                 return next(new Error("Something went wrong"));
             }
-            req.login(user, { session: false }, error => error ? next(error) : res.json(jsonwebtoken_1.default.sign({ user: { id: user.id, email: user.email } }, "TOP_SECRET")));
+            req.login(user, { session: false }, error => error ? next(error) : res.json(jsonwebtoken_1.default.sign({ user: { id: user.id, email: user.email } }, "key")));
         }
         catch (error) {
             return next(error);

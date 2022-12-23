@@ -34,7 +34,7 @@ passport.use(
 
 //With JWT
 passport.use(new JWTStrategy({
-	secretOrKey: "TOP_SECRET",
+	secretOrKey: "key",
 	jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
 }, (token, done) => {
 	try {
