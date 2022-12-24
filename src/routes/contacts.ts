@@ -3,14 +3,14 @@ import { getContacts, getContact, postContacts, putContact, deleteContact} from 
 const contactsRouter = express.Router();
 
 //Contact routes//
-contactsRouter.get("/contacts", getContacts);
+contactsRouter.get("/", getContacts);
 
-contactsRouter.get("/contact/:id", getContact);
+contactsRouter.get("/:id", getContact);
 
-contactsRouter.post("/contacts", postContacts);
+contactsRouter.post("/", postContacts);
 
-contactsRouter.put("/contact/:id", putContact);
+contactsRouter.put("/:id", putContact);
 
-contactsRouter.delete("/contact/:id", deleteContact);
+contactsRouter.delete("/:id", deleteContact);
 
 export default contactsRouter;

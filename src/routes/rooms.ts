@@ -3,14 +3,14 @@ import { deleteRoom, getRooms, getRoom, postRooms, putRoom } from "../controller
 const roomsRouter = express.Router()
 
 //Room routes//
-roomsRouter.get('/rooms', getRooms)
+roomsRouter.get('/', getRooms)
 
-roomsRouter.get("/room/:id", getRoom);
+roomsRouter.get("/:id", getRoom);
 
-roomsRouter.post("/rooms", postRooms);
+roomsRouter.post("/", postRooms);
 
-roomsRouter.put("/room/:id", putRoom);
+roomsRouter.put("/:id", putRoom);
 
-roomsRouter.delete("/room/:id", deleteRoom);
+roomsRouter.delete("/:id", deleteRoom);
 
 export default roomsRouter

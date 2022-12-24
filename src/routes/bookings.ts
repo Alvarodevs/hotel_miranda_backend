@@ -3,14 +3,14 @@ import { deleteBooking, getBookings, getBooking, postBookings, putBooking } from
 const bookingsRouter = express.Router();
 
 //Booking routes//
-bookingsRouter.get("/bookings", getBookings);
+bookingsRouter.get("/", getBookings);
 
-bookingsRouter.get("/booking/:id", getBooking);
+bookingsRouter.get("/:id", getBooking);
 
-bookingsRouter.post("/bookings", postBookings);
+bookingsRouter.post("/", postBookings);
 
-bookingsRouter.put("/booking/:id", putBooking);
+bookingsRouter.put("/:id", putBooking);
 
-bookingsRouter.delete("/booking/:id", deleteBooking);
+bookingsRouter.delete("/:id", deleteBooking);
 
 export default bookingsRouter;

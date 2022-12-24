@@ -7,9 +7,9 @@ const express_1 = __importDefault(require("express"));
 const rooms_1 = require("../controllers/rooms");
 const roomsRouter = express_1.default.Router();
 //Room routes//
-roomsRouter.get('/rooms', rooms_1.getRooms);
-roomsRouter.get("/room/:id", rooms_1.getRoom);
-roomsRouter.post("/rooms", rooms_1.postRooms);
-roomsRouter.put("/room/:id", rooms_1.putRoom);
-roomsRouter.delete("/room/:id", rooms_1.deleteRoom);
+roomsRouter.get('/', rooms_1.getRooms);
+roomsRouter.get("/:id", rooms_1.getRoom);
+roomsRouter.post("/", rooms_1.postRooms);
+roomsRouter.put("/:id", rooms_1.putRoom);
+roomsRouter.delete("/:id", rooms_1.deleteRoom);
 exports.default = roomsRouter;

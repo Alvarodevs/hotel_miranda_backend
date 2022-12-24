@@ -40,11 +40,15 @@ const PORT = 3001;
 app.get('/', (req, res) => {
     res.send('hello');
 });
-app.use('/', login_1.default);
-app.use("/", passport_1.default.authenticate("jwt", { session: false }), bookings_1.default);
-app.use("/", passport_1.default.authenticate("jwt", { session: false }), rooms_1.default);
-app.use("/", passport_1.default.authenticate("jwt", { session: false }), users_1.default);
-app.use("/", passport_1.default.authenticate("jwt", { session: false }), contacts_1.default);
+app.use('/login', login_1.default);
+app.use("/bookings", passport_1.default.authenticate("jwt", { session: false }), bookings_1.default);
+app.use("/rooms", passport_1.default.authenticate("jwt", { session: false }), rooms_1.default);
+app.use("/users", passport_1.default.authenticate("jwt", { session: false }), users_1.default);
+app.use("/contacts", passport_1.default.authenticate("jwt", { session: false }), contacts_1.default);
 app.listen(PORT, () => {
     console.log(`Server running on port: ${PORT}`);
+});
+//incluir el error handler
+app.use(function (err, req, res, next) {
+    res.json(err.message);
 });
