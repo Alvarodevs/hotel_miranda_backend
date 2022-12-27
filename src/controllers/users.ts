@@ -1,7 +1,8 @@
 import { Request, Response } from "express"
+import users from '../../db/users.json'
 
 export const getUsers = (req: Request, res: Response) => {
-	res.send("Users fetched")
+	res.json(users)
 }
 
 export const getUser = (req: Request, res: Response) => {

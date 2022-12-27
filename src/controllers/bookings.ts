@@ -1,7 +1,8 @@
 import { Request, Response } from "express"
+import bookings from "../../db/bookings.json";
 
 export const getBookings = (req: Request, res: Response) => {
-	res.send("Bookings fetched")
+	res.json(bookings)
 }
 
 export const getBooking = (req: Request, res: Response) => {

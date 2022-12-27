@@ -1,8 +1,12 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteUser = exports.putUser = exports.postUsers = exports.getUser = exports.getUsers = void 0;
+const users_json_1 = __importDefault(require("../../db/users.json"));
 const getUsers = (req, res) => {
-    res.send("Users fetched");
+    res.json(users_json_1.default);
 };
 exports.getUsers = getUsers;
 const getUser = (req, res) => {

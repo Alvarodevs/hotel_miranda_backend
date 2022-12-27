@@ -1,7 +1,8 @@
 import { Request, Response } from "express"
+import rooms from "../../db/rooms.json";
 
 export const getRooms = (req: Request, res: Response) => {
-	res.send("Rooms fetched")
+	res.json(rooms)
 }
 
 export const getRoom = (req: Request, res: Response) => {

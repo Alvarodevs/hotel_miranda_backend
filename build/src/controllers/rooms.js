@@ -1,8 +1,12 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteRoom = exports.putRoom = exports.postRooms = exports.getRoom = exports.getRooms = void 0;
+const rooms_json_1 = __importDefault(require("../../db/rooms.json"));
 const getRooms = (req, res) => {
-    res.send("Rooms fetched");
+    res.json(rooms_json_1.default);
 };
 exports.getRooms = getRooms;
 const getRoom = (req, res) => {

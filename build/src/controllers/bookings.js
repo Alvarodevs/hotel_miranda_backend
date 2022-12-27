@@ -1,8 +1,12 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteBooking = exports.putBooking = exports.postBookings = exports.getBooking = exports.getBookings = void 0;
+const bookings_json_1 = __importDefault(require("../../db/bookings.json"));
 const getBookings = (req, res) => {
-    res.send("Bookings fetched");
+    res.json(bookings_json_1.default);
 };
 exports.getBookings = getBookings;
 const getBooking = (req, res) => {
