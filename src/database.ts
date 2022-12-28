@@ -1,18 +1,24 @@
-import mysql from 'mysql'
+import * as dotenv from 'dotenv';
+dotenv.config({path: '../.env'});
+import mysql from 'mysql';
 
 const connection = mysql.createConnection({
-	host: 'localhost:',
-	database: 'hotel_miranda',
-	user: 'root',
-	password: ''
-})
+   host: process.env.HOST,
+   database: process.env.NAME,
+   user: process.env.USER,
+   password: process.env.PASSWORD
+});
 
-connection.connect((error) => {
-	try{
-		console.log('MySQL connection succeded')
-	} catch{
-		throw error
-	}
-})
+connection.connect()
 
-export default connection
+function dbQuery(query: string, params: object) {
+	return new Promise((resolve, reject) => {
+		connection.query(query, params, (error, results) => {
+			if (error)
+				reject(error)
+			resolve(results)
+		})
+	})
+}
+
+export default dbQuery
