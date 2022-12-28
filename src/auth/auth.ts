@@ -1,7 +1,7 @@
 import passport from 'passport';
 import passportLocal from 'passport-local';
 import passportJwt from 'passport-jwt';
-import { IUserLogin } from '../interfaces/userLogin';
+import { IUserLogin } from '../interfaces/IUserLogin';
 
 const localStrategy = passportLocal.Strategy
 const JWTStrategy = passportJwt.Strategy
