@@ -1,14 +1,14 @@
 export interface IBooking {
-   id: string;
+   id?: string;
    photo: string;
    guest_name: string;
-   order_date: string;
-   check_in: string;
-   check_out: string;
+   order_date: Date;
+   check_in: Date;
+   check_out: Date;
    request: string;
-   room_type: string;
+   bed_type: string;
    status: string;
-   price: string;
+   price: number;
    amenities: string;
    room_desc: string;
 }

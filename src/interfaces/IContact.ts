@@ -1,6 +1,6 @@
-interface IContact {
-   id: number;
-   date: string;
+export interface IContact {
+   id?: number;
+   date: Date;
    customer: string;
    email: string;
    phone: string;
