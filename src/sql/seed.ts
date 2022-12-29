@@ -1,10 +1,9 @@
-import dbQuery from "../database";
+import {connection} from "../databaseConnection";
 import { IRoom } from "../interfaces/IRoom";
 import { IBooking } from "../interfaces/IBooking";
 import { IUser } from "../interfaces/IUser";
 import { IContact } from "../interfaces/IContact";
 import { faker } from "@faker-js/faker";
-import { Icon } from "@fortawesome/fontawesome-svg-core";
 
 export const createRandomRoom = (): IRoom => {
    return {
@@ -94,3 +93,63 @@ export const createRandomContact = (): IContact => {
       status: faker.helpers.arrayElement(["publish", "archive"]),
    };
 };
+
+
+const roomsCreator = async (): Promise<void> =>{
+	for (let i = 0; i < 20; i++){
+		const randomRoom = createRandomRoom();
+		connection.query('INSERT INTO rooms SET ?', randomRoom, (error, results) => {
+			if (error) console.log(error)
+			console.log("Row", results)
+		});
+	}
+	
+}
+roomsCreator();
+
+const bookingsCreator = async (): Promise<void> => {
+   for (let i = 0; i < 20; i++) {
+      const randomBooking = createRandomBooking();
+      connection.query(
+         "INSERT INTO bookings SET ?",
+         randomBooking,
+         (error, results) => {
+            if (error) console.log(error);
+            console.log("Row", results);
+         }
+      );
+   }
+};
+bookingsCreator();
+
+const usersCreator = async (): Promise<void> => {
+   for (let i = 0; i < 20; i++) {
+      const randomUser = createRandomUser();
+      connection.query(
+         "INSERT INTO users SET ?",
+         randomUser,
+         (error, results) => {
+            if (error) console.log(error);
+            console.log("Row", results);
+         }
+      );
+   }
+};
+usersCreator();
+
+const contactsCreator = async (): Promise<void> => {
+   for (let i = 0; i < 20; i++) {
+      const randomContact = createRandomContact();
+      connection.query(
+         "INSERT INTO contacts SET ?",
+         randomContact,
+         (error, results) => {
+            if (error) console.log(error);
+            console.log("Row", results);
+         }
+      );
+   }
+};
+contactsCreator();
+
+connection.end();

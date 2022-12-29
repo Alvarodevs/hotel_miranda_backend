@@ -1,6 +1,16 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createRandomContact = exports.createRandomUser = exports.createRandomBooking = exports.createRandomRoom = void 0;
+const databaseConnection_1 = require("../databaseConnection");
 const faker_1 = require("@faker-js/faker");
 const createRandomRoom = () => {
     return {
@@ -85,3 +95,48 @@ const createRandomContact = () => {
     };
 };
 exports.createRandomContact = createRandomContact;
+const roomsCreator = () => __awaiter(void 0, void 0, void 0, function* () {
+    for (let i = 0; i < 20; i++) {
+        const randomRoom = (0, exports.createRandomRoom)();
+        databaseConnection_1.connection.query('INSERT INTO rooms SET ?', randomRoom, (error, results) => {
+            if (error)
+                console.log(error);
+            console.log("Row", results);
+        });
+    }
+});
+roomsCreator();
+const bookingsCreator = () => __awaiter(void 0, void 0, void 0, function* () {
+    for (let i = 0; i < 20; i++) {
+        const randomBooking = createRandomBooking();
+        databaseConnection_1.connection.query("INSERT INTO bookings SET ?", randomBooking, (error, results) => {
+            if (error)
+                console.log(error);
+            console.log("Row", results);
+        });
+    }
+});
+bookingsCreator();
+const usersCreator = () => __awaiter(void 0, void 0, void 0, function* () {
+    for (let i = 0; i < 20; i++) {
+        const randomUser = (0, exports.createRandomUser)();
+        databaseConnection_1.connection.query("INSERT INTO users SET ?", randomUser, (error, results) => {
+            if (error)
+                console.log(error);
+            console.log("Row", results);
+        });
+    }
+});
+usersCreator();
+const contactsCreator = () => __awaiter(void 0, void 0, void 0, function* () {
+    for (let i = 0; i < 20; i++) {
+        const randomContact = (0, exports.createRandomContact)();
+        databaseConnection_1.connection.query("INSERT INTO contacts SET ?", randomContact, (error, results) => {
+            if (error)
+                console.log(error);
+            console.log("Row", results);
+        });
+    }
+});
+contactsCreator();
+databaseConnection_1.connection.end();
