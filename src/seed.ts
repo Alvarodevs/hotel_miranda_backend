@@ -1,17 +1,15 @@
-import {connection} from "../databaseConnection";
-import { IRoom } from "../interfaces/IRoom";
-import { IBooking } from "../interfaces/IBooking";
-import { IUser } from "../interfaces/IUser";
-import { IContact } from "../interfaces/IContact";
+import {connection, dbQuery} from "./databaseConnection";
+import { IRoom } from "./interfaces/IRoom";
+import { IBooking } from "./interfaces/IBooking";
+import { IUser } from "./interfaces/IUser";
+import { IContact } from "./interfaces/IContact";
 import { faker } from "@faker-js/faker";
+import bcrypt from 'bcrypt'
+
 
 export const createRandomRoom = (): IRoom => {
    return {
-      images: faker.helpers.arrayElements([
-         faker.image.imageUrl(640, 480, "room"),
-         faker.image.imageUrl(640, 480, "room"),
-         faker.image.imageUrl(640, 480, "room"),
-      ]),
+      images: faker.image.imageUrl(640, 480, "room"),
       bed_type: faker.helpers.arrayElement([
          "Single",
          "Double",
@@ -21,18 +19,17 @@ export const createRandomRoom = (): IRoom => {
       room_number: faker.datatype.number({ min: 100, max: 899 }),
       description: faker.lorem.lines(3),
       price: faker.datatype
-         .number({ min: 500, max: 1000, precision: 0.01 })
-         .toString(),
+         .number({ min: 50000, max: 100000}),
       offer: faker.datatype.boolean(),
       offer_price: faker.datatype.number({ max: 100 }),
-      cancellation: faker.lorem.lines(5),
-      facilities: faker.helpers.arrayElements([
+      cancellation: faker.lorem.lines(3),
+      facilities: String(faker.helpers.arrayElements([
          "TV",
          "Bathtub",
          "Sea_view",
          "Late_checkout",
          "City_tour",
-      ]),
+      ])),
       status: faker.datatype.boolean(),
    };
 };
@@ -51,8 +48,8 @@ export function createRandomBooking(): IBooking {
       ),
       check_out: faker.date.between(checkInDate, "2023-01-31T00:00:00.000Z"),
       order_date: faker.date.past(),
-      request: faker.lorem.paragraph(),
-      bed_type: faker.helpers.arrayElement([
+      request: faker.lorem.lines(3),
+      room_type: faker.helpers.arrayElement([
          "Single",
          "Double",
          "Double Superior",
@@ -64,17 +61,17 @@ export function createRandomBooking(): IBooking {
          "in_progress",
       ]),
       amenities: "LED tv, bath, late-checkout, sea view, city tour",
-      price: faker.datatype.number({ min: 500, max: 3000, precision: 0.01 }),
+      price: faker.datatype.number({ min: 50000, max: 300000 }),
       room_desc: faker.lorem.paragraphs(2),
    };
 }
 
-export const createRandomUser = (): IUser => {
+export const createRandomUser = async (): Promise<IUser> => {
    return {
       image: faker.image.avatar(),
       name: faker.name.fullName(),
       email: faker.internet.email(),
-      password: faker.internet.password(),
+      password: await passCrypt(faker.internet.password()),
       phone: faker.phone.number(),
       date: faker.date.past(),
       state: faker.datatype.boolean(),
@@ -90,66 +87,49 @@ export const createRandomContact = (): IContact => {
       phone: faker.phone.number(),
       subject: faker.lorem.words(6),
       comment: faker.lorem.sentences(5),
-      status: faker.helpers.arrayElement(["publish", "archive"]),
+      archived: faker.datatype.boolean(),
    };
+};
+
+const passCrypt = async (pass: string): Promise<string> => {
+   return await bcrypt.hash(pass, 10)
+  		.then((result) => result);
 };
 
 
 const roomsCreator = async (): Promise<void> =>{
 	for (let i = 0; i < 20; i++){
-		const randomRoom = createRandomRoom();
-		connection.query('INSERT INTO rooms SET ?', randomRoom, (error, results) => {
-			if (error) console.log(error)
-			console.log("Row", results)
-		});
+		const randomRoom = await createRandomRoom();
+		dbQuery('INSERT INTO rooms SET ?', randomRoom);
 	}
-	
 }
-roomsCreator();
 
 const bookingsCreator = async (): Promise<void> => {
    for (let i = 0; i < 20; i++) {
-      const randomBooking = createRandomBooking();
-      connection.query(
-         "INSERT INTO bookings SET ?",
-         randomBooking,
-         (error, results) => {
-            if (error) console.log(error);
-            console.log("Row", results);
-         }
-      );
+      const randomBooking = await createRandomBooking();
+      dbQuery("INSERT INTO bookings SET ?", randomBooking);
    }
 };
-bookingsCreator();
 
 const usersCreator = async (): Promise<void> => {
    for (let i = 0; i < 20; i++) {
-      const randomUser = createRandomUser();
-      connection.query(
-         "INSERT INTO users SET ?",
-         randomUser,
-         (error, results) => {
-            if (error) console.log(error);
-            console.log("Row", results);
-         }
-      );
+      const randomUser = await createRandomUser();
+      dbQuery("INSERT INTO users SET ?", randomUser);
    }
 };
-usersCreator();
 
 const contactsCreator = async (): Promise<void> => {
    for (let i = 0; i < 20; i++) {
-      const randomContact = createRandomContact();
-      connection.query(
-         "INSERT INTO contacts SET ?",
-         randomContact,
-         (error, results) => {
-            if (error) console.log(error);
-            console.log("Row", results);
-         }
-      );
+      const randomContact = await createRandomContact();
+      dbQuery("INSERT INTO contacts SET ?", randomContact);
    }
 };
-contactsCreator();
 
-connection.end();
+const run = async () => {
+	await roomsCreator();
+	await bookingsCreator();
+	await usersCreator();
+	await contactsCreator();
+}
+
+run();

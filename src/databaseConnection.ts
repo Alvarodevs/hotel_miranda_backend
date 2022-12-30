@@ -11,7 +11,7 @@ export const connection = mysql.createConnection({
 
 connection.connect()
 
-export function dbQuery(query: string, params: object) {
+export function dbQuery(query: string, params: object | null) {
 	return new Promise((resolve, reject) => {
 		connection.query(query, params, (error, results) => {
 			if (error)
@@ -20,5 +20,6 @@ export function dbQuery(query: string, params: object) {
 		})
 	})
 }
+
 
 

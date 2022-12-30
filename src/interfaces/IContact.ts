@@ -6,5 +6,5 @@ export interface IContact {
    phone: string;
    subject: string;
    comment: string;
-   status: string;
+   archived: boolean;
 }

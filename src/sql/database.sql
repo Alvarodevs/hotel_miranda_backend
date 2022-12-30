@@ -4,7 +4,8 @@ USE hotel_miranda;
 
 CREATE TABLE rooms (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
-    bed_type VARCHAR(50),
+	 images TEXT,
+    room_type VARCHAR(50),
 	 room_number INT,
 	 description VARCHAR(255),
     price INT,
@@ -13,11 +14,6 @@ CREATE TABLE rooms (
 	 cancellation VARCHAR(255),
 	 facilities VARCHAR(255),
     status BOOLEAN
-);
-
-CREATE TABLE images(
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  url VARCHAR(255)
 );
 
 CREATE TABLE bookings (
