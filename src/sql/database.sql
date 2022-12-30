@@ -72,18 +72,3 @@ CREATE TABLE bookings_rooms(
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
-
--- CREATE TABLE rooms_photos(
---     id INT AUTO_INCREMENT PRIMARY KEY,
---     room_id INT,
---     photo_id INT,
---     FOREIGN KEY (room_id) REFERENCES rooms(id),
---     FOREIGN KEY (photo_id) REFERENCES photos(id)
--- );
--- CREATE TABLE rooms_facilities(
---     id INT AUTO_INCREMENT PRIMARY KEY,
---     room_id INT,
---     facility_id INT,
---     FOREIGN KEY (room_id) REFERENCES rooms(id),
---     FOREIGN KEY (facility_id) REFERENCES facilities(id)
--- );
