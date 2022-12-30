@@ -27,8 +27,7 @@ const createRandomRoom = () => {
         ]),
         room_number: faker_1.faker.datatype.number({ min: 100, max: 899 }),
         description: faker_1.faker.lorem.lines(3),
-        price: faker_1.faker.datatype
-            .number({ min: 50000, max: 100000 }),
+        price: faker_1.faker.datatype.number({ min: 50000, max: 100000 }),
         offer: faker_1.faker.datatype.boolean(),
         offer_price: faker_1.faker.datatype.number({ max: 100 }),
         cancellation: faker_1.faker.lorem.lines(3),
@@ -95,37 +94,36 @@ const createRandomContact = () => {
 };
 exports.createRandomContact = createRandomContact;
 const passCrypt = (pass) => __awaiter(void 0, void 0, void 0, function* () {
-    return yield bcrypt_1.default.hash(pass, 10)
-        .then((result) => result);
+    return yield bcrypt_1.default.hash(pass, 10).then((result) => result);
 });
-const roomsCreator = () => __awaiter(void 0, void 0, void 0, function* () {
+const roomsCreator = () => {
     for (let i = 0; i < 20; i++) {
-        const randomRoom = yield (0, exports.createRandomRoom)();
-        (0, databaseConnection_1.dbQuery)('INSERT INTO rooms SET ?', randomRoom);
+        const randomRoom = (0, exports.createRandomRoom)();
+        (0, databaseConnection_1.dbQuery)("INSERT INTO rooms SET ?", randomRoom);
     }
-});
-const bookingsCreator = () => __awaiter(void 0, void 0, void 0, function* () {
+};
+const bookingsCreator = () => {
     for (let i = 0; i < 20; i++) {
-        const randomBooking = yield createRandomBooking();
+        const randomBooking = createRandomBooking();
         (0, databaseConnection_1.dbQuery)("INSERT INTO bookings SET ?", randomBooking);
     }
-});
-const usersCreator = () => __awaiter(void 0, void 0, void 0, function* () {
+};
+const usersCreator = () => {
     for (let i = 0; i < 20; i++) {
-        const randomUser = yield (0, exports.createRandomUser)();
+        const randomUser = (0, exports.createRandomUser)();
         (0, databaseConnection_1.dbQuery)("INSERT INTO users SET ?", randomUser);
     }
-});
-const contactsCreator = () => __awaiter(void 0, void 0, void 0, function* () {
+};
+const contactsCreator = () => {
     for (let i = 0; i < 20; i++) {
-        const randomContact = yield (0, exports.createRandomContact)();
+        const randomContact = (0, exports.createRandomContact)();
         (0, databaseConnection_1.dbQuery)("INSERT INTO contacts SET ?", randomContact);
     }
-});
-const run = () => __awaiter(void 0, void 0, void 0, function* () {
-    yield roomsCreator();
-    yield bookingsCreator();
-    yield usersCreator();
-    yield contactsCreator();
-});
+};
+const run = () => {
+    roomsCreator();
+    bookingsCreator();
+    usersCreator();
+    contactsCreator();
+};
 run();

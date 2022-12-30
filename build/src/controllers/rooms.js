@@ -16,26 +16,36 @@ const getRooms = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     return res.json({ rooms: results });
 });
 exports.getRooms = getRooms;
-const getRoom = (req, res) => {
+const getRoom = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    res.send(`Room ${id} fetched`);
-};
+    const result = yield (0, databaseConnection_1.dbQuery)(`SELECT * FROM rooms WHERE id = ${id}`, null);
+    return res.json({ room: result });
+});
 exports.getRoom = getRoom;
 const postRooms = (req, res) => {
-    const { data } = req.body;
-    console.log(data);
-    res.send("Room posted");
+    const { room } = req.body;
+    (0, databaseConnection_1.dbQuery)(`INSERT INTO rooms SET ?`, room);
+    return res.json({
+        info: "Room posted",
+        room: room
+    });
 };
 exports.postRooms = postRooms;
 const putRoom = (req, res) => {
     const { id } = req.params;
-    const { data } = req.body;
-    console.log(data);
-    res.send(`Room ${id} updated`);
+    const { room } = req.body;
+    (0, databaseConnection_1.dbQuery)(`UPDATE rooms SET ? WHERE id = ${id}`, room);
+    return res.json({
+        info: "Room updated",
+        room: room
+    });
 };
 exports.putRoom = putRoom;
 const deleteRoom = (req, res) => {
     const { id } = req.params;
-    res.send(`Room ${id} deleted`);
+    (0, databaseConnection_1.dbQuery)(`DELETE FROM rooms WHERE id = ${id}`, null);
+    return res.json({
+        info: "Room deleted"
+    });
 };
 exports.deleteRoom = deleteRoom;
