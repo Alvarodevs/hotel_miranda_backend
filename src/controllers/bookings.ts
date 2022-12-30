@@ -1,29 +1,40 @@
-import { Request, Response } from "express"
-import bookings from "../../db/bookings.json";
+import { Request, Response } from "express";
+import { dbQuery } from "../databaseConnection";
 
-export const getBookings = (req: Request, res: Response) => {
-	res.json(bookings)
-}
+export const getBookings = async (req: Request, res: Response) => {
+   const results = await dbQuery("SELECT * FROM bookings", null);
+   return res.json({ bookings: results });
+};
 
-export const getBooking = (req: Request, res: Response) => {
+export const getBooking = async (req: Request, res: Response) => {
    const { id } = req.params;
-   res.send(`Booking ${id} fetched`);
+   const result = await dbQuery(`SELECT * FROM bookings WHERE id = ${id}`, null);
+   return res.json({ booking: result });
 };
 
 export const postBookings = (req: Request, res: Response) => {
-   const {data} = req.body
-	console.log(data)
-	res.send("Booking posted")
+   const { booking } = req.body;
+   dbQuery(`INSERT INTO bookings SET ?`, booking);
+   return res.json({
+      info: "Booking posted",
+      booking: booking,
+   });
 };
 
 export const putBooking = (req: Request, res: Response) => {
-   const {id} = req.params
-	const { data } = req.body;
-   console.log(data);
-   res.send(`Booking ${id} updated`);
+   const { id } = req.params;
+   const { booking } = req.body;
+   dbQuery(`UPDATE bookings SET ? WHERE id = ${id}`, booking);
+   return res.json({
+      info: "Booking updated",
+      booking: booking,
+   });
 };
 
 export const deleteBooking = (req: Request, res: Response) => {
    const { id } = req.params;
-   res.send(`Booking ${id} deleted`);
+   dbQuery(`DELETE FROM bookings WHERE id = ${id}`, null);
+   return res.json({
+      info: "Booking deleted",
+   });
 };

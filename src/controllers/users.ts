@@ -1,29 +1,43 @@
-import { Request, Response } from "express"
-import users from '../../db/users.json'
+import { Request, Response } from "express";
+import { dbQuery } from "../databaseConnection";
 
-export const getUsers = (req: Request, res: Response) => {
-	res.json(users)
-}
+export const getUsers = async (req: Request, res: Response) => {
+   const results = await dbQuery("SELECT * FROM users", null);
+   return res.json({ users: results });
+};
 
-export const getUser = (req: Request, res: Response) => {
+export const getUser = async (req: Request, res: Response) => {
    const { id } = req.params;
-   res.send(`User ${id} fetched`);
+   const result = await dbQuery(
+      `SELECT * FROM users WHERE id = ${id}`,
+      null
+   );
+   return res.json({ user: result });
 };
 
 export const postUsers = (req: Request, res: Response) => {
-   const {data} = req.body
-	console.log(data)
-	res.send("User posted")
+   const { user } = req.body;
+   dbQuery(`INSERT INTO users SET ?`, user);
+   return res.json({
+      info: "User posted",
+      user: user,
+   });
 };
 
 export const putUser = (req: Request, res: Response) => {
-   const {id} = req.params
-	const { data } = req.body;
-   console.log(data);
-   res.send(`User ${id} updated`);
+   const { id } = req.params;
+   const { user } = req.body;
+   dbQuery(`UPDATE users SET ? WHERE id = ${id}`, user);
+   return res.json({
+      info: "User updated",
+      user: user,
+   });
 };
 
 export const deleteUser = (req: Request, res: Response) => {
    const { id } = req.params;
-   res.send(`User ${id} deleted`);
+   dbQuery(`DELETE FROM users WHERE id = ${id}`, null);
+   return res.json({
+      info: "User deleted",
+   });
 };

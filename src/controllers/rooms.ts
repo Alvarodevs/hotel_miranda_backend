@@ -1,5 +1,4 @@
 import { Request, Response } from "express"
-import rooms from "../../db/rooms.json";
 import { dbQuery } from "../databaseConnection";
 
 export const getRooms = async (req: Request, res: Response) => {

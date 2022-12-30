@@ -1,28 +1,40 @@
 import { Request, Response } from "express"
+import { dbQuery } from "../databaseConnection";
 
-export const getContacts = (req: Request, res: Response) => {
-	res.send("Contacts fetched")
-}
+export const getContacts = async (req: Request, res: Response) => {
+   const results = await dbQuery("SELECT * FROM contacts", null);
+   return res.json({ contacts: results });
+};
 
-export const getContact = (req: Request, res: Response) => {
+export const getContact = async (req: Request, res: Response) => {
    const { id } = req.params;
-   res.send(`Contact ${id} fetched`);
+   const result = await dbQuery(`SELECT * FROM contacts WHERE id = ${id}`, null);
+   return res.json({ contact: result });
 };
 
 export const postContacts = (req: Request, res: Response) => {
-   const {data} = req.body
-	console.log(data)
-	res.send("Contact posted")
+   const { contact } = req.body;
+   dbQuery(`INSERT INTO contacts SET ?`, contact);
+   return res.json({
+      info: "Contact posted",
+      contact: contact,
+   });
 };
 
 export const putContact = (req: Request, res: Response) => {
-   const {id} = req.params
-	const { data } = req.body;
-   console.log(data);
-   res.send(`Contact ${id} updated`);
+   const { id } = req.params;
+   const { contact } = req.body;
+   dbQuery(`UPDATE contacts SET ? WHERE id = ${id}`, contact);
+   return res.json({
+      info: "Contact updated",
+      contact: contact,
+   });
 };
 
 export const deleteContact = (req: Request, res: Response) => {
    const { id } = req.params;
-   res.send(`Contact ${id} deleted`);
+   dbQuery(`DELETE FROM contacts WHERE id = ${id}`, null);
+   return res.json({
+      info: "Contact deleted",
+   });
 };

@@ -1,6 +1,6 @@
 export interface IContact {
    id?: number;
-   date: Date;
+   date: Date | string;
    customer: string;
    email: string;
    phone: string;

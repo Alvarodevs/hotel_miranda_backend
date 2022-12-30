@@ -1,34 +1,51 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteBooking = exports.putBooking = exports.postBookings = exports.getBooking = exports.getBookings = void 0;
-const bookings_json_1 = __importDefault(require("../../db/bookings.json"));
-const getBookings = (req, res) => {
-    res.json(bookings_json_1.default);
-};
+const databaseConnection_1 = require("../databaseConnection");
+const getBookings = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const results = yield (0, databaseConnection_1.dbQuery)("SELECT * FROM bookings", null);
+    return res.json({ bookings: results });
+});
 exports.getBookings = getBookings;
-const getBooking = (req, res) => {
+const getBooking = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    res.send(`Booking ${id} fetched`);
-};
+    const result = yield (0, databaseConnection_1.dbQuery)(`SELECT * FROM bookings WHERE id = ${id}`, null);
+    return res.json({ booking: result });
+});
 exports.getBooking = getBooking;
 const postBookings = (req, res) => {
-    const { data } = req.body;
-    console.log(data);
-    res.send("Booking posted");
+    const { booking } = req.body;
+    (0, databaseConnection_1.dbQuery)(`INSERT INTO bookings SET ?`, booking);
+    return res.json({
+        info: "Booking posted",
+        booking: booking,
+    });
 };
 exports.postBookings = postBookings;
 const putBooking = (req, res) => {
     const { id } = req.params;
-    const { data } = req.body;
-    console.log(data);
-    res.send(`Booking ${id} updated`);
+    const { booking } = req.body;
+    (0, databaseConnection_1.dbQuery)(`UPDATE bookings SET ? WHERE id = ${id}`, booking);
+    return res.json({
+        info: "Booking updated",
+        booking: booking,
+    });
 };
 exports.putBooking = putBooking;
 const deleteBooking = (req, res) => {
     const { id } = req.params;
-    res.send(`Booking ${id} deleted`);
+    (0, databaseConnection_1.dbQuery)(`DELETE FROM bookings WHERE id = ${id}`, null);
+    return res.json({
+        info: "Booking deleted",
+    });
 };
 exports.deleteBooking = deleteBooking;
