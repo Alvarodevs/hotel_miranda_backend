@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { dbQuery } from "../databaseConnection";
+import { dbQuery } from "../mongoConnection";
 
 export const getContacts = async (req: Request, res: Response) => {
    const results = await dbQuery("SELECT * FROM contacts", null);

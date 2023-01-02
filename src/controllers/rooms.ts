@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { dbQuery } from "../databaseConnection";
+import { dbQuery } from "../mongoConnection";
 
 export const getRooms = async (req: Request, res: Response) => {
 	const results = await dbQuery('SELECT * FROM rooms', null)
