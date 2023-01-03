@@ -27,7 +27,9 @@ app.listen(PORT, () => {
 	console.log(`Server running on port: ${PORT}`)
 })
 
-//incluir el error handler
-app.use(function (err: Error, req: Request, res: Response, next: NextFunction) {
-	res.json(err.message)
+//error handler
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+	res.status(500).send({error: err.message})
 })
+
+export default app;
