@@ -10,21 +10,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteUser = exports.putUser = exports.postUsers = exports.getUser = exports.getUsers = void 0;
-const mongoConnection_1 = require("../mongoConnection");
 const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const results = yield (0, mongoConnection_1.dbQuery)("SELECT * FROM users", null);
-    return res.json({ users: results });
+    return res.json({ users: "Users" });
 });
 exports.getUsers = getUsers;
 const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const result = yield (0, mongoConnection_1.dbQuery)(`SELECT * FROM users WHERE id = ${id}`, null);
-    return res.json({ user: result });
+    return res.json({ user: "User" });
 });
 exports.getUser = getUser;
 const postUsers = (req, res) => {
     const { user } = req.body;
-    (0, mongoConnection_1.dbQuery)(`INSERT INTO users SET ?`, user);
     return res.json({
         info: "User posted",
         user: user,
@@ -34,7 +30,6 @@ exports.postUsers = postUsers;
 const putUser = (req, res) => {
     const { id } = req.params;
     const { user } = req.body;
-    (0, mongoConnection_1.dbQuery)(`UPDATE users SET ? WHERE id = ${id}`, user);
     return res.json({
         info: "User updated",
         user: user,
@@ -43,7 +38,6 @@ const putUser = (req, res) => {
 exports.putUser = putUser;
 const deleteUser = (req, res) => {
     const { id } = req.params;
-    (0, mongoConnection_1.dbQuery)(`DELETE FROM users WHERE id = ${id}`, null);
     return res.json({
         info: "User deleted",
     });

@@ -13,9 +13,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createRandomContact = exports.createRandomUser = exports.createRandomBooking = exports.createRandomRoom = void 0;
-const mongoConnection_1 = require("./mongoConnection");
+const schemas_1 = require("./schemas");
 const faker_1 = require("@faker-js/faker");
-const bcrypt_1 = __importDefault(require("bcrypt"));
+const passCrypt_1 = __importDefault(require("./utils/passCrypt"));
+const mongoConnection_1 = require("./mongoConnection");
+const run = () => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, mongoConnection_1.connection)();
+    //roomsCreator();
+    bookingsCreator();
+    //usersCreator();
+    //contactsCreator();
+    yield (0, mongoConnection_1.disconnect)();
+});
+run();
+//Functions creators with fakerJS
 const createRandomRoom = () => {
     return {
         images: faker_1.faker.image.imageUrl(640, 480, "room"),
@@ -73,7 +84,7 @@ const createRandomUser = () => __awaiter(void 0, void 0, void 0, function* () {
         image: faker_1.faker.image.avatar(),
         name: faker_1.faker.name.fullName(),
         email: faker_1.faker.internet.email(),
-        password: yield passCrypt(faker_1.faker.internet.password()),
+        password: yield (0, passCrypt_1.default)(faker_1.faker.internet.password()),
         phone: faker_1.faker.phone.number(),
         date: faker_1.faker.date.past(),
         state: faker_1.faker.datatype.boolean(),
@@ -93,37 +104,25 @@ const createRandomContact = () => {
     };
 };
 exports.createRandomContact = createRandomContact;
-const passCrypt = (pass) => __awaiter(void 0, void 0, void 0, function* () {
-    return yield bcrypt_1.default.hash(pass, 10).then((result) => result);
-});
-const roomsCreator = () => {
-    for (let i = 0; i < 20; i++) {
-        const randomRoom = (0, exports.createRandomRoom)();
-        (0, mongoConnection_1.dbQuery)("INSERT INTO rooms SET ?", randomRoom);
-    }
-};
-const bookingsCreator = () => {
+//---------------------------------------
+// const roomsCreator = (): void => {
+//    for (let i = 0; i < 20; i++) {
+//       const randomRoom: IRoom = createRandomRoom();
+//    }
+// };
+const bookingsCreator = () => __awaiter(void 0, void 0, void 0, function* () {
     for (let i = 0; i < 20; i++) {
         const randomBooking = createRandomBooking();
-        (0, mongoConnection_1.dbQuery)("INSERT INTO bookings SET ?", randomBooking);
+        yield schemas_1.Booking.create(randomBooking);
     }
-};
-const usersCreator = () => {
-    for (let i = 0; i < 20; i++) {
-        const randomUser = (0, exports.createRandomUser)();
-        (0, mongoConnection_1.dbQuery)("INSERT INTO users SET ?", randomUser);
-    }
-};
-const contactsCreator = () => {
-    for (let i = 0; i < 20; i++) {
-        const randomContact = (0, exports.createRandomContact)();
-        (0, mongoConnection_1.dbQuery)("INSERT INTO contacts SET ?", randomContact);
-    }
-};
-const run = () => {
-    roomsCreator();
-    bookingsCreator();
-    usersCreator();
-    contactsCreator();
-};
-run();
+});
+// const usersCreator = (): Promise<void> => {
+//    for (let i = 0; i < 20; i++) {
+//       const randomUser: IUser = createRandomUser();
+//    }
+// };
+// const contactsCreator = (): void => {
+//    for (let i = 0; i < 20; i++) {
+//       const randomContact: IContact = createRandomContact();
+//    }
+// };

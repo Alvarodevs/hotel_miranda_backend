@@ -35,9 +35,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.disconnect = exports.connection = void 0;
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
 const mongoose_1 = __importDefault(require("mongoose"));
+mongoose_1.default.set("strictQuery", false);
 function connection() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -48,12 +50,10 @@ function connection() {
         }
     });
 }
-// export function dbQuery(query: string, params: object | null) {
-// 	return new Promise((resolve, reject) => {
-// 		connection.query(query, params, (error, results) => {
-// 			if (error)
-// 				reject(error)
-// 			resolve(results)
-// 		})
-// 	})
-// }
+exports.connection = connection;
+function disconnect() {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield mongoose_1.default.disconnect();
+    });
+}
+exports.disconnect = disconnect;

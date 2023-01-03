@@ -1,11 +1,21 @@
-import { dbQuery } from "./mongoConnection";
-import { IRoom } from "./interfaces/IRoom";
-import { IBooking } from "./interfaces/IBooking";
-import { IUser } from "./interfaces/IUser";
-import { IContact } from "./interfaces/IContact";
+import { IRoom, IBooking, IUser, IContact } from "./interfaces";
+import { Room, Booking, User, Contact } from "./schemas"
 import { faker } from "@faker-js/faker";
-import bcrypt from "bcrypt";
+import passCrypt from "./utils/passCrypt";
+import { connection, disconnect } from "./mongoConnection";
 
+const run = async (): Promise<void> => {
+   await connection();
+   //roomsCreator();
+   bookingsCreator();
+   //usersCreator();
+   //contactsCreator();
+   await disconnect();
+};
+
+run();
+
+//Functions creators with fakerJS
 export const createRandomRoom = (): IRoom => {
    return {
       images: faker.image.imageUrl(640, 480, "room"),
@@ -90,44 +100,34 @@ export const createRandomContact = (): IContact => {
       archived: faker.datatype.boolean(),
    };
 };
+//---------------------------------------
 
-const passCrypt = async (pass: string): Promise<string> => {
-   return await bcrypt.hash(pass, 10).then((result) => result);
-};
 
-const roomsCreator = (): void => {
+
+// const roomsCreator = (): void => {
+//    for (let i = 0; i < 20; i++) {
+//       const randomRoom: IRoom = createRandomRoom();
+//    }
+// };
+
+const bookingsCreator = async (): Promise<void> => {
    for (let i = 0; i < 20; i++) {
-      const randomRoom = createRandomRoom();
-      dbQuery("INSERT INTO rooms SET ?", randomRoom);
+      const randomBooking: IBooking = createRandomBooking();
+		await Booking.create(randomBooking)
    }
 };
 
-const bookingsCreator = (): void => {
-   for (let i = 0; i < 20; i++) {
-      const randomBooking = createRandomBooking();
-      dbQuery("INSERT INTO bookings SET ?", randomBooking);
-   }
-};
+// const usersCreator = (): Promise<void> => {
+//    for (let i = 0; i < 20; i++) {
+//       const randomUser: IUser = createRandomUser();
+//    }
+// };
 
-const usersCreator = (): void => {
-   for (let i = 0; i < 20; i++) {
-      const randomUser = createRandomUser();
-      dbQuery("INSERT INTO users SET ?", randomUser);
-   }
-};
+// const contactsCreator = (): void => {
+//    for (let i = 0; i < 20; i++) {
+//       const randomContact: IContact = createRandomContact();
+//    }
+// };
 
-const contactsCreator = (): void => {
-   for (let i = 0; i < 20; i++) {
-      const randomContact = createRandomContact();
-      dbQuery("INSERT INTO contacts SET ?", randomContact);
-   }
-};
 
-const run = () => {
-   roomsCreator();
-   bookingsCreator();
-   usersCreator();
-   contactsCreator();
-};
 
-run();
