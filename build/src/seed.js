@@ -19,10 +19,7 @@ const passCrypt_1 = __importDefault(require("./utils/passCrypt"));
 const mongoConnection_1 = require("./mongoConnection");
 const run = () => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, mongoConnection_1.connection)();
-    //roomsCreator();
-    bookingsCreator();
-    //usersCreator();
-    //contactsCreator();
+    yield bookingsCreator();
     yield (0, mongoConnection_1.disconnect)();
 });
 run();

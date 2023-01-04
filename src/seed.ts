@@ -6,10 +6,7 @@ import { connection, disconnect } from "./mongoConnection";
 
 const run = async (): Promise<void> => {
    await connection();
-   //roomsCreator();
-   bookingsCreator();
-   //usersCreator();
-   //contactsCreator();
+   await bookingsCreator();
    await disconnect();
 };
 
