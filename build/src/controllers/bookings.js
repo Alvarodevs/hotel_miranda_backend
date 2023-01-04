@@ -43,14 +43,25 @@ const postBookings = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     yield (0, mongoConnection_1.disconnect)();
 });
 exports.postBookings = postBookings;
-const putBooking = (req, res) => {
+const putBooking = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, mongoConnection_1.connection)();
     const { id } = req.params;
-    const { booking } = req.body;
-    return res.json({
-        info: "Booking updated",
-        // booking: booking,
-    });
-};
+    const booking = req.body.booking;
+    try {
+        const bookingUpToDate = schemas_1.Booking.findOneAndUpdate({ _id: id }, booking);
+        res.status(201).json({
+            message: "Booking has been updated",
+            booking: bookingUpToDate,
+        });
+    }
+    catch (error) {
+        res.status(400).send({
+            message: "Something went wrong, check booking details.",
+        });
+        next(error);
+    }
+    yield (0, mongoConnection_1.disconnect)();
+});
 exports.putBooking = putBooking;
 const deleteBooking = (req, res) => {
     const { id } = req.params;

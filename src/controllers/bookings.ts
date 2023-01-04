@@ -34,13 +34,26 @@ export const postBookings = async (req: Request, res: Response, next: NextFuncti
 	await disconnect();
 };
 
-export const putBooking = (req: Request, res: Response) => {
-   const { id } = req.params;
-   const { booking } = req.body;
-   return res.json({
-      info: "Booking updated",
-      // booking: booking,
-   });
+export const putBooking = async (req: Request, res: Response, next: NextFunction) => {
+   await connection();
+	const { id } = req.params;
+   const booking: IBooking = req.body.booking;
+   try {
+      const bookingUpToDate = Booking.findOneAndUpdate(
+         { _id: id },
+         booking
+      );
+      res.status(201).json({
+         message: "Booking has been updated",
+         booking: bookingUpToDate,
+      });
+   } catch (error) {
+      res.status(400).send({
+         message: "Something went wrong, check booking details.",
+      });
+      next(error);
+   }
+	await disconnect();
 };
 
 export const deleteBooking = (req: Request, res: Response) => {
