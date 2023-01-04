@@ -27,13 +27,21 @@ const getBooking = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     yield (0, mongoConnection_1.disconnect)();
 });
 exports.getBooking = getBooking;
-const postBookings = (req, res) => {
-    const booking = req.body;
-    res.json({
-        info: "Booking posted",
-        // booking: booking,
-    });
-};
+const postBookings = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, mongoConnection_1.connection)();
+    const booking = new schemas_1.Booking(req.body.booking);
+    try {
+        const postedBooking = yield booking.save();
+        res.status(201).json({ postedBooking });
+    }
+    catch (error) {
+        res.status(400).send({
+            message: "Something went wrong, check booking details.",
+        });
+        next(error);
+    }
+    yield (0, mongoConnection_1.disconnect)();
+});
 exports.postBookings = postBookings;
 const putBooking = (req, res) => {
     const { id } = req.params;

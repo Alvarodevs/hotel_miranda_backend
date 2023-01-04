@@ -1,7 +1,8 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { connection, disconnect } from "../mongoConnection";
 import { IBooking, IRoom, IUser, IContact } from "../interfaces";
-import { Booking, Room, User, Contact } from "../schemas";
+import { Booking } from "../schemas";
+import { nextTick } from "process";
 
 export const getBookings = async (req: Request, res: Response) => {
 	await connection(); 
@@ -18,12 +19,19 @@ export const getBooking = async (req: Request, res: Response) => {
 	await disconnect();
 };
 
-export const postBookings = (req: Request, res: Response) => {
-   const booking: IBooking = req.body;
-   res.json({
-      info: "Booking posted",
-      // booking: booking,
-   });
+export const postBookings = async (req: Request, res: Response, next: NextFunction) => {
+	await connection();
+   const booking = new Booking(req.body.booking);
+   try {
+		const postedBooking = await booking.save();
+		res.status(201).json({postedBooking})
+	} catch (error) {
+		res.status(400).send({
+         message: "Something went wrong, check booking details.",
+      });
+		next(error)
+	}
+	await disconnect();
 };
 
 export const putBooking = (req: Request, res: Response) => {
