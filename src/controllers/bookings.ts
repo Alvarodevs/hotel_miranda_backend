@@ -14,13 +14,13 @@ export const getBooking = async (req: Request, res: Response) => {
 	await connection()
    const { id } = req.params;
 	const booking: IBooking | null = await Booking.findById(id)
-   return res.json(booking);
+   res.json(booking);
 	await disconnect();
 };
 
 export const postBookings = (req: Request, res: Response) => {
-   const { booking } = req.body;
-   return res.json({
+   const booking: IBooking = req.body;
+   res.json({
       info: "Booking posted",
       // booking: booking,
    });

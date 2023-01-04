@@ -103,7 +103,6 @@ export const createRandomContact = (): IContact => {
 //---------------------------------------
 
 
-
 const roomsCreator = async (): Promise<void> => {
    for (let i = 0; i < 20; i++) {
       const randomRoom: IRoom = createRandomRoom();

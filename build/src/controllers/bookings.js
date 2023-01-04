@@ -23,13 +23,13 @@ const getBooking = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     yield (0, mongoConnection_1.connection)();
     const { id } = req.params;
     const booking = yield schemas_1.Booking.findById(id);
-    return res.json(booking);
+    res.json(booking);
     yield (0, mongoConnection_1.disconnect)();
 });
 exports.getBooking = getBooking;
 const postBookings = (req, res) => {
-    const { booking } = req.body;
-    return res.json({
+    const booking = req.body;
+    res.json({
         info: "Booking posted",
         // booking: booking,
     });
