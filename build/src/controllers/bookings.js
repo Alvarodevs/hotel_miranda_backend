@@ -10,18 +10,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteBooking = exports.putBooking = exports.postBookings = exports.getBooking = exports.getBookings = void 0;
-// import { dbQuery } from "../mongoConnection";
+const mongoConnection_1 = require("../mongoConnection");
+const schemas_1 = require("../schemas");
 const getBookings = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    return res.json({
-        bookings: "Booking list"
-    });
+    yield (0, mongoConnection_1.connection)();
+    const bookings = yield schemas_1.Booking.find();
+    res.json(bookings);
+    yield (0, mongoConnection_1.disconnect)();
 });
 exports.getBookings = getBookings;
 const getBooking = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, mongoConnection_1.connection)();
     const { id } = req.params;
-    return res.json({
-        booking: "Booking"
-    });
+    const booking = yield schemas_1.Booking.findById(id);
+    return res.json(booking);
+    yield (0, mongoConnection_1.disconnect)();
 });
 exports.getBooking = getBooking;
 const postBookings = (req, res) => {

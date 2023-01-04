@@ -1,17 +1,21 @@
 import { Request, Response } from "express";
-// import { dbQuery } from "../mongoConnection";
+import { connection, disconnect } from "../mongoConnection";
+import { IBooking, IRoom, IUser, IContact } from "../interfaces";
+import { Booking, Room, User, Contact } from "../schemas";
 
 export const getBookings = async (req: Request, res: Response) => {
-   return res.json({ 
-		bookings: "Booking list" 
-	});
+	await connection(); 
+	const bookings: IBooking[] = await Booking.find();
+	res.json(bookings);
+	await disconnect()
 };
 
 export const getBooking = async (req: Request, res: Response) => {
+	await connection()
    const { id } = req.params;
-   return res.json({ 
-		booking: "Booking" 
-	});
+	const booking: IBooking | null = await Booking.findById(id)
+   return res.json(booking);
+	await disconnect();
 };
 
 export const postBookings = (req: Request, res: Response) => {
