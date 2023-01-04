@@ -7,6 +7,9 @@ import { connection, disconnect } from "./mongoConnection";
 const run = async (): Promise<void> => {
    await connection();
    await bookingsCreator();
+	await roomsCreator();
+   await usersCreator();
+   await contactsCreator();
    await disconnect();
 };
 
@@ -101,11 +104,12 @@ export const createRandomContact = (): IContact => {
 
 
 
-// const roomsCreator = (): void => {
-//    for (let i = 0; i < 20; i++) {
-//       const randomRoom: IRoom = createRandomRoom();
-//    }
-// };
+const roomsCreator = async (): Promise<void> => {
+   for (let i = 0; i < 20; i++) {
+      const randomRoom: IRoom = createRandomRoom();
+      await Room.create(randomRoom);
+   }
+};
 
 const bookingsCreator = async (): Promise<void> => {
    for (let i = 0; i < 20; i++) {
@@ -114,17 +118,19 @@ const bookingsCreator = async (): Promise<void> => {
    }
 };
 
-// const usersCreator = (): Promise<void> => {
-//    for (let i = 0; i < 20; i++) {
-//       const randomUser: IUser = createRandomUser();
-//    }
-// };
+const usersCreator = async (): Promise<void> => {
+   for (let i = 0; i < 20; i++) {
+      const randomUser: IUser = await createRandomUser();
+		await User.create(randomUser);
+   }
+};
 
-// const contactsCreator = (): void => {
-//    for (let i = 0; i < 20; i++) {
-//       const randomContact: IContact = createRandomContact();
-//    }
-// };
+const contactsCreator = async (): Promise<void> => {
+   for (let i = 0; i < 20; i++) {
+      const randomContact: IContact = createRandomContact();
+      await Contact.create(randomContact);
+   }
+};
 
 
 

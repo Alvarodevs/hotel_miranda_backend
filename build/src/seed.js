@@ -20,6 +20,9 @@ const mongoConnection_1 = require("./mongoConnection");
 const run = () => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, mongoConnection_1.connection)();
     yield bookingsCreator();
+    yield roomsCreator();
+    yield usersCreator();
+    yield contactsCreator();
     yield (0, mongoConnection_1.disconnect)();
 });
 run();
@@ -102,24 +105,27 @@ const createRandomContact = () => {
 };
 exports.createRandomContact = createRandomContact;
 //---------------------------------------
-// const roomsCreator = (): void => {
-//    for (let i = 0; i < 20; i++) {
-//       const randomRoom: IRoom = createRandomRoom();
-//    }
-// };
+const roomsCreator = () => __awaiter(void 0, void 0, void 0, function* () {
+    for (let i = 0; i < 20; i++) {
+        const randomRoom = (0, exports.createRandomRoom)();
+        yield schemas_1.Room.create(randomRoom);
+    }
+});
 const bookingsCreator = () => __awaiter(void 0, void 0, void 0, function* () {
     for (let i = 0; i < 20; i++) {
         const randomBooking = createRandomBooking();
         yield schemas_1.Booking.create(randomBooking);
     }
 });
-// const usersCreator = (): Promise<void> => {
-//    for (let i = 0; i < 20; i++) {
-//       const randomUser: IUser = createRandomUser();
-//    }
-// };
-// const contactsCreator = (): void => {
-//    for (let i = 0; i < 20; i++) {
-//       const randomContact: IContact = createRandomContact();
-//    }
-// };
+const usersCreator = () => __awaiter(void 0, void 0, void 0, function* () {
+    for (let i = 0; i < 20; i++) {
+        const randomUser = yield (0, exports.createRandomUser)();
+        yield schemas_1.User.create(randomUser);
+    }
+});
+const contactsCreator = () => __awaiter(void 0, void 0, void 0, function* () {
+    for (let i = 0; i < 20; i++) {
+        const randomContact = (0, exports.createRandomContact)();
+        yield schemas_1.Contact.create(randomContact);
+    }
+});
