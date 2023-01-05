@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { connection, disconnect } from "../mongoConnection";
-import { IBooking, IRoom, IUser, IContact } from "../interfaces";
+import { IBooking} from "../interfaces";
 import { Booking } from "../schemas";
-import { nextTick } from "process";
+import { Types } from "mongoose";
 
 export const getBookings = async (req: Request, res: Response) => {
 	await connection(); 
@@ -49,16 +49,26 @@ export const putBooking = async (req: Request, res: Response, next: NextFunction
       });
    } catch (error) {
       res.status(400).send({
-         message: "Something went wrong, check booking details.",
+         message: "Something went wrong, booking could not be updated.",
       });
       next(error);
    }
 	await disconnect();
 };
 
-export const deleteBooking = (req: Request, res: Response) => {
+export const deleteBooking = async (req: Request, res: Response, next: NextFunction) => {
+   await connection();
    const { id } = req.params;
-   return res.json({
-      info: "Booking deleted",
-   });
+   try {
+      const bookingToDelete = Booking.findOneAndDelete({ '_id': id });
+      res.status(202).json({
+         message: `Booking with id ${id} has been deleted`,
+      });
+   } catch (error) {
+      res.status(400).send({
+         message: "Something went wrong, booking still persists. Try again.",
+      });
+      next(error);
+   }
+   return await disconnect();
 };

@@ -10,36 +10,74 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteContact = exports.putContact = exports.postContacts = exports.getContact = exports.getContacts = void 0;
+const mongoConnection_1 = require("../mongoConnection");
+const schemas_1 = require("../schemas");
 const getContacts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    return res.json({ contacts: "Contacts" });
+    yield (0, mongoConnection_1.connection)();
+    const contacts = yield schemas_1.Contact.find();
+    res.json(contacts);
+    yield (0, mongoConnection_1.disconnect)();
 });
 exports.getContacts = getContacts;
 const getContact = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, mongoConnection_1.connection)();
     const { id } = req.params;
-    return res.json({ contact: "Contact" });
+    const contact = yield schemas_1.Contact.findById(id);
+    res.json(contact);
+    yield (0, mongoConnection_1.disconnect)();
 });
 exports.getContact = getContact;
-const postContacts = (req, res) => {
-    const { contact } = req.body;
-    return res.json({
-        info: "Contact posted",
-        contact: contact,
-    });
-};
+const postContacts = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, mongoConnection_1.connection)();
+    const contact = new schemas_1.Contact(req.body.contact);
+    try {
+        const postedContact = yield contact.save();
+        res.status(201).json({ postedContact });
+    }
+    catch (error) {
+        res.status(400).send({
+            message: "Something went wrong, check contact details.",
+        });
+        next(error);
+    }
+    yield (0, mongoConnection_1.disconnect)();
+});
 exports.postContacts = postContacts;
-const putContact = (req, res) => {
+const putContact = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, mongoConnection_1.connection)();
     const { id } = req.params;
-    const { contact } = req.body;
-    return res.json({
-        info: "Contact updated",
-        contact: contact,
-    });
-};
+    const contact = req.body.contact;
+    try {
+        const contactUpToDate = schemas_1.Contact.findOneAndUpdate({ _id: id }, contact);
+        res.status(201).json({
+            message: "Contact has been updated",
+            contact: contactUpToDate,
+        });
+    }
+    catch (error) {
+        res.status(400).send({
+            message: "Something went wrong, contact could not be updated.",
+        });
+        next(error);
+    }
+    yield (0, mongoConnection_1.disconnect)();
+});
 exports.putContact = putContact;
-const deleteContact = (req, res) => {
+const deleteContact = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, mongoConnection_1.connection)();
     const { id } = req.params;
-    return res.json({
-        info: "Contact deleted",
-    });
-};
+    try {
+        const contactToDelete = schemas_1.Contact.findOneAndDelete({ _id: id });
+        res.status(202).json({
+            message: `Contact with id ${id} has been deleted`,
+        });
+    }
+    catch (error) {
+        res.status(400).send({
+            message: "Something went wrong, contact still persists. Try again.",
+        });
+        next(error);
+    }
+    return yield (0, mongoConnection_1.disconnect)();
+});
 exports.deleteContact = deleteContact;

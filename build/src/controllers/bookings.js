@@ -56,17 +56,28 @@ const putBooking = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
     }
     catch (error) {
         res.status(400).send({
-            message: "Something went wrong, check booking details.",
+            message: "Something went wrong, booking could not be updated.",
         });
         next(error);
     }
     yield (0, mongoConnection_1.disconnect)();
 });
 exports.putBooking = putBooking;
-const deleteBooking = (req, res) => {
+const deleteBooking = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, mongoConnection_1.connection)();
     const { id } = req.params;
-    return res.json({
-        info: "Booking deleted",
-    });
-};
+    try {
+        const bookingToDelete = schemas_1.Booking.findOneAndDelete({ '_id': id });
+        res.status(202).json({
+            message: `Booking with id ${id} has been deleted`,
+        });
+    }
+    catch (error) {
+        res.status(400).send({
+            message: "Something went wrong, booking still persists. Try again.",
+        });
+        next(error);
+    }
+    return yield (0, mongoConnection_1.disconnect)();
+});
 exports.deleteBooking = deleteBooking;
