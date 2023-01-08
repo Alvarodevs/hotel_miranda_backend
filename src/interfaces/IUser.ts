@@ -3,7 +3,7 @@ export interface IUser {
    image: string;
    name: string;
    email: string;
-   password: string;
+   password: string | Promise<string> | undefined;
    phone: string;
    date: Date | string;
    job_desc: string;

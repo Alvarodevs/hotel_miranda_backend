@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import { disconnect } from "../mongoConnection";
 import { IUser } from "../interfaces";
 import { User } from "../schemas";
+import bcrypt from 'bcrypt';
+import passCrypt from "../utils/passCrypt";
 
 export const getUsers = async (req: Request, res: Response) => {
    const users: IUser[] = await User.find();
@@ -26,32 +28,37 @@ export const postUsers = async (
       const postedUser = await user.save();
       res.status(201).json({ postedUser });
    } catch (error) {
-      res.status(400).send({
+      res.status(400).json({
          message: "Something went wrong, check user details.",
       });
-      next(error);
    }
    await disconnect();
 };
 //Hacer findOne con id, y comprobar si passw en db === passw en body
-export const putUser = async (
-   req: Request,
-   res: Response,
-   next: NextFunction
-) => { 
+export const putUser = async (req: Request, res: Response, next: NextFunction) => { 
    try {
 		const { id } = req.params;
-      const user: IUser = req.body.user;
+		const {image, name, email, password, phone, date, job_desc, state} = req.body.user
+		const userDb = await User.findById(id)
+      const user: IUser = {
+         image: image ? image : userDb?.image,
+         name: name ? name : userDb?.name,
+         email: email ? email : userDb?.email,
+         password: await bcrypt.compare(password, String(userDb?.password)) ? passCrypt(password) : userDb?.password,
+         phone: phone ? phone : userDb?.phone,
+         date: date ? date : userDb?.date,
+         job_desc: job_desc ? job_desc : userDb?.job_desc,
+         state: state ? state : userDb?.state,
+      };
       const userUpToDate = await User.findOneAndUpdate({ _id: id }, user);
-      res.status(201).json({
+      res.json({
          message: "User has been updated",
          user: userUpToDate,
       });
    } catch (error) {
-      res.status(400).send({
+      res.status(400).json({
          message: "Something went wrong, user could not be updated.",
       });
-      next(error);
    }
    await disconnect();
 };
@@ -68,10 +75,9 @@ export const deleteUser = async (
          message: `User with id ${id} has been deleted`,
       });
    } catch (error) {
-      res.status(400).send({
+      res.status(400).json({
          message: "Something went wrong, user still persists. Try again.",
       });
-      next(error);
    }
    return await disconnect();
 };

@@ -8,10 +8,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteUser = exports.putUser = exports.postUsers = exports.getUser = exports.getUsers = void 0;
 const mongoConnection_1 = require("../mongoConnection");
 const schemas_1 = require("../schemas");
+const bcrypt_1 = __importDefault(require("bcrypt"));
+const passCrypt_1 = __importDefault(require("../utils/passCrypt"));
 const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const users = yield schemas_1.User.find();
     res.json(users);
@@ -32,10 +37,9 @@ const postUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         res.status(201).json({ postedUser });
     }
     catch (error) {
-        res.status(400).send({
+        res.status(400).json({
             message: "Something went wrong, check user details.",
         });
-        next(error);
     }
     yield (0, mongoConnection_1.disconnect)();
 });
@@ -44,18 +48,28 @@ exports.postUsers = postUsers;
 const putUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const user = req.body.user;
+        const { image, name, email, password, phone, date, job_desc, state } = req.body.user;
+        const userDb = yield schemas_1.User.findById(id);
+        const user = {
+            image: image ? image : userDb === null || userDb === void 0 ? void 0 : userDb.image,
+            name: name ? name : userDb === null || userDb === void 0 ? void 0 : userDb.name,
+            email: email ? email : userDb === null || userDb === void 0 ? void 0 : userDb.email,
+            password: (yield bcrypt_1.default.compare(password, String(userDb === null || userDb === void 0 ? void 0 : userDb.password))) ? (0, passCrypt_1.default)(password) : userDb === null || userDb === void 0 ? void 0 : userDb.password,
+            phone: phone ? phone : userDb === null || userDb === void 0 ? void 0 : userDb.phone,
+            date: date ? date : userDb === null || userDb === void 0 ? void 0 : userDb.date,
+            job_desc: job_desc ? job_desc : userDb === null || userDb === void 0 ? void 0 : userDb.job_desc,
+            state: state ? state : userDb === null || userDb === void 0 ? void 0 : userDb.state,
+        };
         const userUpToDate = yield schemas_1.User.findOneAndUpdate({ _id: id }, user);
-        res.status(201).json({
+        res.json({
             message: "User has been updated",
             user: userUpToDate,
         });
     }
     catch (error) {
-        res.status(400).send({
+        res.status(400).json({
             message: "Something went wrong, user could not be updated.",
         });
-        next(error);
     }
     yield (0, mongoConnection_1.disconnect)();
 });
@@ -69,10 +83,9 @@ const deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         });
     }
     catch (error) {
-        res.status(400).send({
+        res.status(400).json({
             message: "Something went wrong, user still persists. Try again.",
         });
-        next(error);
     }
     return yield (0, mongoConnection_1.disconnect)();
 });
