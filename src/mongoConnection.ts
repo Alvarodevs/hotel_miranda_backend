@@ -1,15 +1,16 @@
 import * as dotenv from 'dotenv';
-dotenv.config();
 import mongoose from 'mongoose';
+dotenv.config();
 
-mongoose.set("strictQuery", false);
+mongoose.set('strictQuery', true);
+
+const uri = process.env.URI_DB || 'mongodb://127.0.0.1:27017/hotel_miranda'
 
 export async function connection(): Promise<void> {
-	try {
-		await mongoose.connect("mongodb://127.0.0.1:27017/hotel_miranda");
-	} catch (error){
-		console.error(error);
-	}
+	await mongoose.connect(uri);
+	mongoose.connection.on('error', (error) => {
+		console.error(error)
+	})
 }
 
 export async function disconnect (): Promise<void> {

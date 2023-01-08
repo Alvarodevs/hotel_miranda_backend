@@ -37,17 +37,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.disconnect = exports.connection = void 0;
 const dotenv = __importStar(require("dotenv"));
-dotenv.config();
 const mongoose_1 = __importDefault(require("mongoose"));
-mongoose_1.default.set("strictQuery", false);
+dotenv.config();
+mongoose_1.default.set('strictQuery', true);
+const uri = process.env.URI_DB || 'mongodb://127.0.0.1:27017/hotel_miranda';
 function connection() {
     return __awaiter(this, void 0, void 0, function* () {
-        try {
-            yield mongoose_1.default.connect("mongodb://127.0.0.1:27017/hotel_miranda");
-        }
-        catch (error) {
+        yield mongoose_1.default.connect(uri);
+        mongoose_1.default.connection.on('error', (error) => {
             console.error(error);
-        }
+        });
     });
 }
 exports.connection = connection;

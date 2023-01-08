@@ -13,14 +13,12 @@ exports.deleteRoom = exports.putRoom = exports.postRooms = exports.getRoom = exp
 const mongoConnection_1 = require("../mongoConnection");
 const schemas_1 = require("../schemas");
 const getRooms = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, mongoConnection_1.connection)();
     const rooms = yield schemas_1.Room.find();
     res.json(rooms);
     yield (0, mongoConnection_1.disconnect)();
 });
 exports.getRooms = getRooms;
 const getRoom = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, mongoConnection_1.connection)();
     const { id } = req.params;
     const room = yield schemas_1.Room.findById(id);
     res.json(room);
@@ -28,9 +26,8 @@ const getRoom = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getRoom = getRoom;
 const postRooms = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, mongoConnection_1.connection)();
-    const room = new schemas_1.Room(req.body.room);
     try {
+        const room = new schemas_1.Room(req.body.room);
         const postedRoom = yield room.save();
         res.status(201).json({ postedRoom });
     }
@@ -38,45 +35,40 @@ const postRooms = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         res.status(400).send({
             message: "Something went wrong, check room details.",
         });
-        next(error);
     }
     yield (0, mongoConnection_1.disconnect)();
 });
 exports.postRooms = postRooms;
 const putRoom = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, mongoConnection_1.connection)();
-    const { id } = req.params;
-    const room = req.body.room;
     try {
-        const roomUpToDate = schemas_1.Room.findOneAndUpdate({ _id: id }, room);
+        const { id } = req.params;
+        const room = req.body.room;
+        const roomUpToDate = yield schemas_1.Room.findOneAndUpdate({ _id: id }, room);
         res.status(201).json({
             message: "Room has been updated",
             room: roomUpToDate,
         });
     }
     catch (error) {
-        res.status(400).send({
+        res.status(400).json({
             message: "Something went wrong, room could not be updated.",
         });
-        next(error);
     }
     yield (0, mongoConnection_1.disconnect)();
 });
 exports.putRoom = putRoom;
 const deleteRoom = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, mongoConnection_1.connection)();
-    const { id } = req.params;
     try {
+        const { id } = req.params;
         const roomToDelete = schemas_1.Room.findOneAndDelete({ _id: id });
         res.status(202).json({
             message: `Room with id ${id} has been deleted`,
         });
     }
     catch (error) {
-        res.status(400).send({
+        res.status(400).json({
             message: "Something went wrong, room still persists. Try again.",
         });
-        next(error);
     }
     return yield (0, mongoConnection_1.disconnect)();
 });

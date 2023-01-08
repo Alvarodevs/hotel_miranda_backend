@@ -13,14 +13,12 @@ exports.deleteUser = exports.putUser = exports.postUsers = exports.getUser = exp
 const mongoConnection_1 = require("../mongoConnection");
 const schemas_1 = require("../schemas");
 const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, mongoConnection_1.connection)();
     const users = yield schemas_1.User.find();
     res.json(users);
     yield (0, mongoConnection_1.disconnect)();
 });
 exports.getUsers = getUsers;
 const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, mongoConnection_1.connection)();
     const { id } = req.params;
     const user = yield schemas_1.User.findById(id);
     res.json(user);
@@ -28,9 +26,8 @@ const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getUser = getUser;
 const postUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, mongoConnection_1.connection)();
-    const user = new schemas_1.User(req.body.user);
     try {
+        const user = new schemas_1.User(req.body.user);
         const postedUser = yield user.save();
         res.status(201).json({ postedUser });
     }
@@ -43,12 +40,12 @@ const postUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     yield (0, mongoConnection_1.disconnect)();
 });
 exports.postUsers = postUsers;
+//Hacer findOne con id, y comprobar si passw en db === passw en body
 const putUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, mongoConnection_1.connection)();
-    const { id } = req.params;
-    const user = req.body.user;
     try {
-        const userUpToDate = schemas_1.User.findOneAndUpdate({ _id: id }, user);
+        const { id } = req.params;
+        const user = req.body.user;
+        const userUpToDate = yield schemas_1.User.findOneAndUpdate({ _id: id }, user);
         res.status(201).json({
             message: "User has been updated",
             user: userUpToDate,
@@ -64,9 +61,8 @@ const putUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.putUser = putUser;
 const deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, mongoConnection_1.connection)();
-    const { id } = req.params;
     try {
+        const { id } = req.params;
         const userToDelete = schemas_1.User.findOneAndDelete({ _id: id });
         res.status(202).json({
             message: `User with id ${id} has been deleted`,

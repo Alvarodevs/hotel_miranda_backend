@@ -32,7 +32,7 @@ passport_1.default.use("login", new localStrategy({
 //With JWT
 passport_1.default.use(new JWTStrategy({
     secretOrKey: "key",
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 }, (token, done) => {
     try {
         return done(null, token.user);

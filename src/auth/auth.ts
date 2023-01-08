@@ -33,13 +33,18 @@ passport.use(
 
 
 //With JWT
-passport.use(new JWTStrategy({
-	secretOrKey: "key",
-	jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
-}, (token, done) => {
-	try {
-		return done(null, token.user)
-	} catch (error) {
-		done(error)
-	}})
+passport.use(
+   new JWTStrategy(
+      {
+         secretOrKey: "key",
+         jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      },
+      (token, done) => {
+         try {
+            return done(null, token.user);
+         } catch (error) {
+            done(error);
+         }
+      }
+   )
 );
