@@ -1,5 +1,7 @@
+import { Types } from "mongoose";
+
 export interface IContact {
-   id?: number;
+   _id?: typeof Types.ObjectId;
    date: Date | string;
    customer: string;
    email: string;

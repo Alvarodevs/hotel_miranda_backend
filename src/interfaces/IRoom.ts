@@ -1,5 +1,7 @@
+import { Types } from "mongoose";
+
 export interface IRoom {
-   id?: string;
+   _id?: typeof Types.ObjectId;
    images: string;
    bed_type: string;
    room_number: number;

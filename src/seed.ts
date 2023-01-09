@@ -4,20 +4,64 @@ import { faker } from "@faker-js/faker";
 import passCrypt from "./utils/passCrypt";
 import { connection, disconnect } from "./mongoConnection";
 
+
+
 const run = async (): Promise<void> => {
    await connection();
-   await bookingsCreator();
 	await roomsCreator();
    await usersCreator();
+	await bookingsCreator();
    await contactsCreator();
    await disconnect();
 };
 
 run();
 
+//Storing data for booings
+const rooms: Array<IRoom> = []
+const users: Array<IUser> = [];
+
+
+
+async function roomsCreator(): Promise<void> {
+   for (let i = 0; i < 20; i++) {
+      const randomRoom: IRoom = await createRandomRoom();
+		rooms.push(randomRoom)
+      await Room.create(randomRoom);
+   }
+};
+
+async function  usersCreator(): Promise<void> {
+   for (let i = 0; i < 20; i++) {
+      const randomUser: IUser = await createRandomUser();
+		users.push(randomUser);
+		await User.create(randomUser);
+   }
+};
+
+async function  bookingsCreator(): Promise<void> {
+   for (let i = 0; i < 20; i++) {
+		const user:  IUser = users[Math.round(Math.random() * users.length - 1)]
+		const room: IRoom = rooms[Math.round(Math.random() * rooms.length - 1)];
+      const randomBooking: IBooking = await createRandomBooking(
+			await randomRoomInBooking(room), 
+			await randomUserInBooking(user)
+		);
+		await Booking.create(randomBooking)
+   }
+};
+
+
+async function contactsCreator(): Promise<void>  {
+   for (let i = 0; i < 20; i++) {
+      const randomContact: IContact = await createRandomContact();
+      await Contact.create(randomContact);
+   }
+};
+
 //Functions creators with fakerJS
-export const createRandomRoom = (): IRoom => {
-   return {
+async function createRandomRoom(): Promise<IRoom> {
+   return new Room<IRoom>({
       images: faker.image.imageUrl(640, 480, "room"),
       bed_type: faker.helpers.arrayElement([
          "Single",
@@ -41,15 +85,30 @@ export const createRandomRoom = (): IRoom => {
          ])
       ),
       status: faker.datatype.boolean(),
-   };
+   });
 };
 
-export function createRandomBooking(): IBooking {
+async function createRandomUser(): Promise<IUser> {
+   return new User<IUser>({
+      image: faker.image.avatar(),
+      name: faker.name.fullName(),
+      email: faker.internet.email(),
+      password: await passCrypt(faker.internet.password()),
+      phone: faker.phone.number(),
+      date: faker.date.past(),
+      state: faker.datatype.boolean(),
+      job_desc: faker.lorem.lines(4),
+   });
+};
+
+async function createRandomBooking(room: IRoom, user: IUser): Promise<IBooking> {
    const checkInDate = faker.date.between(
       "2022-01-01T00:00:00.000Z",
       "2022-12-31T00:00:00.000Z"
    );
    return {
+      user_id: user._id,
+      room_id: room._id,
       photo: faker.image.avatar(),
       guest_name: faker.name.fullName(),
       check_in: faker.date.between(
@@ -76,20 +135,7 @@ export function createRandomBooking(): IBooking {
    };
 }
 
-export const createRandomUser = async (): Promise<IUser> => {
-   return {
-      image: faker.image.avatar(),
-      name: faker.name.fullName(),
-      email: faker.internet.email(),
-      password: await passCrypt(faker.internet.password()),
-      phone: faker.phone.number(),
-      date: faker.date.past(),
-      state: faker.datatype.boolean(),
-      job_desc: faker.lorem.lines(4),
-   };
-};
-
-export const createRandomContact = (): IContact => {
+async function createRandomContact(): Promise<IContact> {
    return {
       date: faker.date.past(),
       customer: faker.name.fullName(),
@@ -103,33 +149,20 @@ export const createRandomContact = (): IContact => {
 //---------------------------------------
 
 
-const roomsCreator = async (): Promise<void> => {
-   for (let i = 0; i < 20; i++) {
-      const randomRoom: IRoom = createRandomRoom();
-      await Room.create(randomRoom);
-   }
+
+
+//GETTERS - Random data for bookings
+async function randomRoomInBooking(room: IRoom): Promise<IRoom> {
+	const roomDb = Room.findOne({'_id': room._id})
+	return await roomDb.exec()
+		.then(result => result)
 };
 
-const bookingsCreator = async (): Promise<void> => {
-   for (let i = 0; i < 20; i++) {
-      const randomBooking: IBooking = createRandomBooking();
-		await Booking.create(randomBooking)
-   }
+async function randomUserInBooking(user: IUser): Promise<IUser> {
+	
+	const userDb = User.findOne({'_id': user._id})
+	return await userDb.exec()
+		.then((result) => result);
+		
 };
-
-const usersCreator = async (): Promise<void> => {
-   for (let i = 0; i < 20; i++) {
-      const randomUser: IUser = await createRandomUser();
-		await User.create(randomUser);
-   }
-};
-
-const contactsCreator = async (): Promise<void> => {
-   for (let i = 0; i < 20; i++) {
-      const randomContact: IContact = createRandomContact();
-      await Contact.create(randomContact);
-   }
-};
-
-
 

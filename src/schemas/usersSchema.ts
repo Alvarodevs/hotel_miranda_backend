@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
+import { IUser } from "../interfaces";
 
-const userSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema<IUser>({
    image: String,
    name: String,
    email: String,
@@ -9,6 +10,6 @@ const userSchema = new mongoose.Schema({
    date: Date,
    job_desc: String,
    state: Boolean,
-}) 
+}); 
 
 export const User = mongoose.model('User', userSchema);
