@@ -34,6 +34,7 @@ export const postUsers = async (
    }
    await disconnect();
 };
+
 //Hacer findOne con id, y comprobar si passw en db === passw en body
 export const putUser = async (req: Request, res: Response, next: NextFunction) => { 
    try {

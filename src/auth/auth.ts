@@ -22,9 +22,7 @@ passport.use(
          passwordField: "password",
       }, 
 			async (email: string, password: string, done) => {
-				
 				await connection();
-
 				try {
 					//getter user by email & comparing password by bcrypt.compare
 					const currentUser = await User.findOne({ "email": email }).exec();
