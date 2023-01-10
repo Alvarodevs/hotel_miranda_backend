@@ -44,7 +44,7 @@ export const putUser = async (req: Request, res: Response, next: NextFunction) =
          image: image ? image : userDb?.image,
          name: name ? name : userDb?.name,
          email: email ? email : userDb?.email,
-         password: await bcrypt.compare(password, String(userDb?.password)) ? passCrypt(password) : userDb?.password,
+         password: bcrypt.compare(password, String(userDb?.password)) ? await passCrypt(password) : userDb?.password,
          phone: phone ? phone : userDb?.phone,
          date: date ? date : userDb?.date,
          job_desc: job_desc ? job_desc : userDb?.job_desc,

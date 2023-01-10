@@ -6,7 +6,7 @@ export const postLogin = (req: Request, res: Response, next: NextFunction) => {
    passport.authenticate("login", (err, user, info) => {
 		try {
 			if(!user || err) {
-				return next(new Error("Something went wrong"))
+				return next(err)
 			}
 			req.login(
 				user, 

@@ -5,7 +5,7 @@ export interface IUser {
    image: string;
    name: string;
    email: string;
-   password: string | Promise<string> | undefined;
+   password?: string;
    phone: string;
    date: Date | string;
    job_desc: string;

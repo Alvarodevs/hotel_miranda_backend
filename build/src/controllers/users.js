@@ -54,7 +54,7 @@ const putUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
             image: image ? image : userDb === null || userDb === void 0 ? void 0 : userDb.image,
             name: name ? name : userDb === null || userDb === void 0 ? void 0 : userDb.name,
             email: email ? email : userDb === null || userDb === void 0 ? void 0 : userDb.email,
-            password: (yield bcrypt_1.default.compare(password, String(userDb === null || userDb === void 0 ? void 0 : userDb.password))) ? (0, passCrypt_1.default)(password) : userDb === null || userDb === void 0 ? void 0 : userDb.password,
+            password: bcrypt_1.default.compare(password, String(userDb === null || userDb === void 0 ? void 0 : userDb.password)) ? yield (0, passCrypt_1.default)(password) : userDb === null || userDb === void 0 ? void 0 : userDb.password,
             phone: phone ? phone : userDb === null || userDb === void 0 ? void 0 : userDb.phone,
             date: date ? date : userDb === null || userDb === void 0 ? void 0 : userDb.date,
             job_desc: job_desc ? job_desc : userDb === null || userDb === void 0 ? void 0 : userDb.job_desc,

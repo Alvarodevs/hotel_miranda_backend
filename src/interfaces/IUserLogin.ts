@@ -1,4 +1,7 @@
+import { Types } from "mongoose";
+
 export interface IUserLogin {
-	id: number,
-	email: string 
+	_id?: typeof Types.ObjectId | number,
+	email: string,
+	password?: string 
 }
