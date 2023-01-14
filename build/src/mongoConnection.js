@@ -40,10 +40,11 @@ const dotenv = __importStar(require("dotenv"));
 const mongoose_1 = __importDefault(require("mongoose"));
 dotenv.config();
 mongoose_1.default.set('strictQuery', true);
-const uri = process.env.URI_DB || 'mongodb://127.0.0.1:27017/hotel_miranda';
+const atlas = process.env.ATLAS_URL;
+const uri = process.env.URI_DB;
 function connection() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield mongoose_1.default.connect(uri);
+        yield mongoose_1.default.connect(atlas || uri);
         mongoose_1.default.connection.on('error', (error) => {
             console.error(error);
         });

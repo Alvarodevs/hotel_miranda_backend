@@ -13,12 +13,14 @@ exports.deleteContact = exports.putContact = exports.postContacts = exports.getC
 const mongoConnection_1 = require("../mongoConnection");
 const schemas_1 = require("../schemas");
 const getContacts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, mongoConnection_1.connection)();
     const contacts = yield schemas_1.Contact.find();
     res.json(contacts);
     yield (0, mongoConnection_1.disconnect)();
 });
 exports.getContacts = getContacts;
 const getContact = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, mongoConnection_1.connection)();
     const { id } = req.params;
     const contact = yield schemas_1.Contact.findById(id);
     res.json(contact);
@@ -26,6 +28,7 @@ const getContact = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 exports.getContact = getContact;
 const postContacts = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, mongoConnection_1.connection)();
     try {
         const contact = new schemas_1.Contact(req.body.contact);
         const postedContact = yield contact.save();
@@ -40,6 +43,7 @@ const postContacts = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
 });
 exports.postContacts = postContacts;
 const putContact = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, mongoConnection_1.connection)();
     try {
         const { id } = req.params;
         const contact = req.body.contact;
@@ -58,6 +62,7 @@ const putContact = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
 });
 exports.putContact = putContact;
 const deleteContact = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, mongoConnection_1.connection)();
     try {
         const { id } = req.params;
         const contactToDelete = yield schemas_1.Contact.findOneAndDelete({ _id: id });

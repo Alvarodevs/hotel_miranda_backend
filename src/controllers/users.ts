@@ -1,18 +1,20 @@
 import { NextFunction, Request, Response } from "express";
-import { disconnect } from "../mongoConnection";
+import { connection, disconnect } from "../mongoConnection";
 import { IUser } from "../interfaces";
 import { User } from "../schemas";
 import bcrypt from 'bcrypt';
 import passCrypt from "../utils/passCrypt";
 
 export const getUsers = async (req: Request, res: Response) => {
-   const users: IUser[] = await User.find();
+   await connection();
+	const users: IUser[] = await User.find();
    res.json(users);
    await disconnect();
 };
 
 export const getUser = async (req: Request, res: Response) => {
-   const { id } = req.params;
+   await connection();
+	const { id } = req.params;
    const user: IUser | null = await User.findById(id);
    res.json(user);
    await disconnect();
@@ -23,7 +25,8 @@ export const postUsers = async (
    res: Response,
    next: NextFunction
 ) => {
-   try {
+   await connection();
+	try {
 		const user = new User(req.body.user);
       const postedUser = await user.save();
       res.status(201).json({ postedUser });
@@ -37,7 +40,8 @@ export const postUsers = async (
 
 //Hacer findOne con id, y comprobar si passw en db === passw en body
 export const putUser = async (req: Request, res: Response, next: NextFunction) => { 
-   try {
+   await connection();
+	try {
 		const { id } = req.params;
 		const {image, name, email, password, phone, date, job_desc, state} = req.body.user
 		const userDb = await User.findById(id)
@@ -69,7 +73,8 @@ export const deleteUser = async (
    res: Response,
    next: NextFunction
 ) => {
-   try {
+   await connection();
+	try {
 		const { id } = req.params;
       const userToDelete = User.findOneAndDelete({ _id: id });
       res.status(202).json({

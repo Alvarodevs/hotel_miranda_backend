@@ -4,10 +4,11 @@ dotenv.config();
 
 mongoose.set('strictQuery', true);
 
-const uri = process.env.URI_DB || 'mongodb://127.0.0.1:27017/hotel_miranda'
+const atlas = process.env.ATLAS_URL
+const uri = process.env.URI_DB
 
 export async function connection(): Promise<void> {
-	await mongoose.connect(uri);
+	await mongoose.connect(atlas || uri);
 	mongoose.connection.on('error', (error) => {
 		console.error(error)
 	})

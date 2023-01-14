@@ -33,9 +33,11 @@ const users_1 = __importDefault(require("./routes/users"));
 const contacts_1 = __importDefault(require("./routes/contacts"));
 const login_1 = __importDefault(require("./routes/login"));
 const passport_1 = __importDefault(require("passport"));
+const cors_1 = __importDefault(require("cors"));
 const mongoConnection_1 = require("./mongoConnection");
 Promise.resolve().then(() => __importStar(require("./auth/auth")));
 const app = (0, express_1.default)();
+app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
 app.get('/', (req, res) => {

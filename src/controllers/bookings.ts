@@ -1,23 +1,26 @@
 import { NextFunction, Request, Response } from "express";
-import { disconnect } from "../mongoConnection";
+import { connection, disconnect } from "../mongoConnection";
 import { IBooking} from "../interfaces";
 import { Booking } from "../schemas";
 
 export const getBookings = async (req: Request, res: Response) => {
+	await connection()
 	const bookings: IBooking[] = await Booking.find();
 	res.status(200).json(bookings);
 	await disconnect()
 };
 
 export const getBooking = async (req: Request, res: Response) => {
-   const { id } = req.params;
+   await connection();
+	const { id } = req.params;
 	const booking: IBooking | null = await Booking.findById(id)
    res.json(booking);
 	await disconnect();
 };
 
 export const postBookings = async (req: Request, res: Response, next: NextFunction) => {
-   const booking = new Booking(req.body.booking);
+   await connection();
+	const booking = new Booking(req.body.booking);
    try {
 		const postedBooking = await booking.save();
 		res.status(201).json({postedBooking})
@@ -30,7 +33,8 @@ export const postBookings = async (req: Request, res: Response, next: NextFuncti
 };
 
 export const putBooking = async (req: Request, res: Response, next: NextFunction) => {
-   try {
+   await connection();
+	try {
 		const { id } = req.params;
       const booking: IBooking = req.body.booking;
       const bookingUpToDate = await Booking.findOneAndUpdate({ _id: id },booking);
@@ -47,7 +51,8 @@ export const putBooking = async (req: Request, res: Response, next: NextFunction
 };
 
 export const deleteBooking = async (req: Request, res: Response, next: NextFunction) => {
-   try {
+   await connection();
+	try {
 		const { id } = req.params;
       const bookingToDelete = await Booking.findOneAndDelete({ '_id': id });
       res.status(202).json({

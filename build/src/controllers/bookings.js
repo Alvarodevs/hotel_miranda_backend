@@ -13,12 +13,14 @@ exports.deleteBooking = exports.putBooking = exports.postBookings = exports.getB
 const mongoConnection_1 = require("../mongoConnection");
 const schemas_1 = require("../schemas");
 const getBookings = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, mongoConnection_1.connection)();
     const bookings = yield schemas_1.Booking.find();
     res.status(200).json(bookings);
     yield (0, mongoConnection_1.disconnect)();
 });
 exports.getBookings = getBookings;
 const getBooking = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, mongoConnection_1.connection)();
     const { id } = req.params;
     const booking = yield schemas_1.Booking.findById(id);
     res.json(booking);
@@ -26,6 +28,7 @@ const getBooking = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 exports.getBooking = getBooking;
 const postBookings = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, mongoConnection_1.connection)();
     const booking = new schemas_1.Booking(req.body.booking);
     try {
         const postedBooking = yield booking.save();
@@ -40,6 +43,7 @@ const postBookings = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
 });
 exports.postBookings = postBookings;
 const putBooking = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, mongoConnection_1.connection)();
     try {
         const { id } = req.params;
         const booking = req.body.booking;
@@ -58,6 +62,7 @@ const putBooking = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
 });
 exports.putBooking = putBooking;
 const deleteBooking = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, mongoConnection_1.connection)();
     try {
         const { id } = req.params;
         const bookingToDelete = yield schemas_1.Booking.findOneAndDelete({ '_id': id });

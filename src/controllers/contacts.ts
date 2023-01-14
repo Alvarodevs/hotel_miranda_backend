@@ -1,16 +1,18 @@
 import { NextFunction, Request, Response } from "express";
-import { disconnect } from "../mongoConnection";
+import { connection, disconnect } from "../mongoConnection";
 import { IContact } from "../interfaces";
 import { Contact } from "../schemas";
 
 export const getContacts = async (req: Request, res: Response) => {
-   const contacts: IContact[] = await Contact.find();
+   await connection();
+	const contacts: IContact[] = await Contact.find();
    res.json(contacts);
    await disconnect();
 };
 
 export const getContact = async (req: Request, res: Response) => {
-   const { id } = req.params;
+   await connection();
+	const { id } = req.params;
    const contact: IContact | null = await Contact.findById(id);
    res.json(contact);
    await disconnect();
@@ -21,7 +23,7 @@ export const postContacts = async (
    res: Response,
    next: NextFunction
 ) => {
-   
+   await connection();
    try {
 		const contact = new Contact(req.body.contact);
       const postedContact = await contact.save();
@@ -39,7 +41,8 @@ export const putContact = async (
    res: Response,
    next: NextFunction
 ) => {
-   try {
+   await connection();
+	try {
 		const { id } = req.params;
       const contact: IContact = req.body.contact;
       const contactUpToDate = await Contact.findOneAndUpdate({ _id: id }, contact);
@@ -60,7 +63,7 @@ export const deleteContact = async (
    res: Response,
    next: NextFunction
 ) => {
-   
+   await connection();
    try {
 		const { id } = req.params;
       const contactToDelete = await Contact.findOneAndDelete({ _id: id });

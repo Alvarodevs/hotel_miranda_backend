@@ -18,12 +18,14 @@ const schemas_1 = require("../schemas");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const passCrypt_1 = __importDefault(require("../utils/passCrypt"));
 const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, mongoConnection_1.connection)();
     const users = yield schemas_1.User.find();
     res.json(users);
     yield (0, mongoConnection_1.disconnect)();
 });
 exports.getUsers = getUsers;
 const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, mongoConnection_1.connection)();
     const { id } = req.params;
     const user = yield schemas_1.User.findById(id);
     res.json(user);
@@ -31,6 +33,7 @@ const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getUser = getUser;
 const postUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, mongoConnection_1.connection)();
     try {
         const user = new schemas_1.User(req.body.user);
         const postedUser = yield user.save();
@@ -46,6 +49,7 @@ const postUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, function
 exports.postUsers = postUsers;
 //Hacer findOne con id, y comprobar si passw en db === passw en body
 const putUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, mongoConnection_1.connection)();
     try {
         const { id } = req.params;
         const { image, name, email, password, phone, date, job_desc, state } = req.body.user;
@@ -75,6 +79,7 @@ const putUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.putUser = putUser;
 const deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, mongoConnection_1.connection)();
     try {
         const { id } = req.params;
         const userToDelete = schemas_1.User.findOneAndDelete({ _id: id });

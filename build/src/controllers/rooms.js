@@ -13,12 +13,14 @@ exports.deleteRoom = exports.putRoom = exports.postRooms = exports.getRoom = exp
 const mongoConnection_1 = require("../mongoConnection");
 const schemas_1 = require("../schemas");
 const getRooms = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, mongoConnection_1.connection)();
     const rooms = yield schemas_1.Room.find();
-    res.json(rooms);
+    res.status(200).json(rooms);
     yield (0, mongoConnection_1.disconnect)();
 });
 exports.getRooms = getRooms;
 const getRoom = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, mongoConnection_1.connection)();
     const { id } = req.params;
     const room = yield schemas_1.Room.findById(id);
     res.json(room);
@@ -26,6 +28,7 @@ const getRoom = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getRoom = getRoom;
 const postRooms = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, mongoConnection_1.connection)();
     try {
         const room = new schemas_1.Room(req.body.room);
         const postedRoom = yield room.save();
@@ -40,6 +43,7 @@ const postRooms = (req, res, next) => __awaiter(void 0, void 0, void 0, function
 });
 exports.postRooms = postRooms;
 const putRoom = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, mongoConnection_1.connection)();
     try {
         const { id } = req.params;
         const room = req.body.room;
@@ -58,6 +62,7 @@ const putRoom = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.putRoom = putRoom;
 const deleteRoom = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, mongoConnection_1.connection)();
     try {
         const { id } = req.params;
         const roomToDelete = schemas_1.Room.findOneAndDelete({ _id: id });

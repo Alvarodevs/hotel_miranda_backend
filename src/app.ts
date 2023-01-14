@@ -5,10 +5,12 @@ import usersRouter from './routes/users';
 import contactsRouter from './routes/contacts';
 import loginRouter from './routes/login';
 import passport from 'passport';
+import cors from 'cors';
 import { connection } from './mongoConnection';
 import ("./auth/auth")
 
 const app = express()
+app.use(cors());
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }));

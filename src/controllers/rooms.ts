@@ -1,16 +1,18 @@
 import { NextFunction, Request, Response } from "express";
-import { disconnect } from "../mongoConnection";
+import { connection, disconnect } from "../mongoConnection";
 import { IRoom } from "../interfaces";
 import { Room } from "../schemas";
 
 export const getRooms = async (req: Request, res: Response) => {
-   const rooms: IRoom[] = await Room.find();
-   res.json(rooms);
+   await connection();
+	const rooms: IRoom[] = await Room.find();
+   res.status(200).json(rooms);
    await disconnect();
 };
 
 export const getRoom = async (req: Request, res: Response) => {
-   const { id } = req.params;
+   await connection();
+	const { id } = req.params;
    const room: IRoom | null = await Room.findById(id);
    res.json(room);
    await disconnect();
@@ -21,7 +23,8 @@ export const postRooms = async (
    res: Response,
    next: NextFunction
 ) => {
-   try {
+   await connection();
+	try {
 		const room = new Room(req.body.room);
       const postedRoom = await room.save();
       res.status(201).json({ postedRoom });
@@ -38,7 +41,7 @@ export const putRoom = async (
    res: Response,
    next: NextFunction
 ) => {
-   
+   await connection();
    try {
 		const { id } = req.params;
       const room: IRoom = req.body.room;
@@ -60,7 +63,8 @@ export const deleteRoom = async (
    res: Response,
    next: NextFunction
 ) => {
-   try {
+   await connection();
+	try {
 		const { id } = req.params;
       const roomToDelete = Room.findOneAndDelete({ _id: id });
       res.status(202).json({
