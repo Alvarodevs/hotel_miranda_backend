@@ -36,11 +36,11 @@ const passport_1 = __importDefault(require("passport"));
 Promise.resolve().then(() => __importStar(require("./auth/auth")));
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
-const PORT = 3001;
-app.get('/', (req, res) => {
-    res.send('hello');
+const PORT = 3306;
+app.get("/", (req, res) => {
+    res.send("hello");
 });
-app.use('/login', login_1.default);
+app.use("/login", login_1.default);
 app.use("/bookings", passport_1.default.authenticate("jwt", { session: false }), bookings_1.default);
 app.use("/rooms", passport_1.default.authenticate("jwt", { session: false }), rooms_1.default);
 app.use("/users", passport_1.default.authenticate("jwt", { session: false }), users_1.default);
