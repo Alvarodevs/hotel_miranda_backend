@@ -36,7 +36,7 @@ const passport_1 = __importDefault(require("passport"));
 Promise.resolve().then(() => __importStar(require("./auth/auth")));
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
-const PORT = 3306;
+const PORT = 3001;
 app.get("/", (req, res) => {
     res.send("hello");
 });
