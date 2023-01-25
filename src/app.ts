@@ -10,7 +10,7 @@ import("./auth/auth");
 const app = express();
 
 app.use(express.json());
-const PORT = 3306;
+const PORT = 3001;
 app.get("/", (req: Request, res: Response) => {
    res.send("hello");
 });
