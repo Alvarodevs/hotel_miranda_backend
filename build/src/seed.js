@@ -80,16 +80,12 @@ function createRandomBooking() {
 }
 function passCrypt(pass) {
     return __awaiter(this, void 0, void 0, function* () {
-        //console.log(typeof pass);
         return yield bcrypt_1.default.hash(pass, 10).then((res) => res);
-        //no imprime esto en clg
-        // console.log('result passcrypt', result)
     });
 }
 ;
 function createRandomUser() {
     return __awaiter(this, void 0, void 0, function* () {
-        //no imprime esto en clg
         return {
             image: faker_1.faker.image.avatar(),
             name: faker_1.faker.name.fullName(),

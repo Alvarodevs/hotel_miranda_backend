@@ -2,6 +2,7 @@ import passport from 'passport';
 import passportLocal from 'passport-local';
 import passportJwt from 'passport-jwt';
 import { IUserLogin } from '../interfaces/IUserLogin';
+import { dbQuery } from '../databaseConnection';
 
 const localStrategy = passportLocal.Strategy
 const JWTStrategy = passportJwt.Strategy
@@ -14,17 +15,28 @@ passport.use(
       {
          usernameField: "email",
          passwordField: "password",
-      }, (email, password, done) => {
+      }, 
+      async (email, password, done) => {
          try {
-            if (email === 'alvaro@example.com' && password === '1234') {
-					const user: IUserLogin = {
-						id: 0,
-						email: email
-					}
-               return done(null, user, { message: "User logged in" });
-            } else return done(null, false, { message: "Please check your credentials" });
-
-         } catch (error) {
+            const user = await dbQuery('SELECT * FROM users WHERE email = ? AND password = ?;', [email, password])
+                  .then(user => user)
+            console.log(user);
+            if (!user) {
+               if(email === process.env.PUBLIC_EMAIL && password === process.env.PUBLIC_PASSWORD) {
+                  const user = {
+                     id: 1,
+                     email: process.env.PUBLIC_EMAIL
+                  }
+                  return done(null, user, { message: "User logged in" });
+               } else {
+                  return done(null, false, { message: "Please check your credentials" })
+               }
+            } else {   
+               return done(null, {id: user.id, email: user.email}, { message: "User logged in" });
+            } 
+            //else return done(null, false, { message: "Please check your credentials" });
+         }
+          catch (error) {
             return done(error);
          }
       }

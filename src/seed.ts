@@ -80,15 +80,10 @@ async function createRandomBooking(): Promise<IBooking> {
 }
 
 async function passCrypt(pass: string): Promise<string> {
-   //console.log(typeof pass);
-   return await bcrypt.hash(pass, 10).then((res: string) => res);
-   //no imprime esto en clg
-   // console.log('result passcrypt', result)
-   
+   return await bcrypt.hash(pass, 10).then((res: string) => res);   
 };
 
 async function createRandomUser (): Promise<IUser> {
-   //no imprime esto en clg
    return {
       image: faker.image.avatar(),
       name: faker.name.fullName(),
