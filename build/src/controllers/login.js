@@ -12,7 +12,9 @@ const postLogin = (req, res, next) => {
             if (!user || err) {
                 return next(err);
             }
-            req.login(user, { session: false }, error => error ? next(error) : res.json({ "token": jsonwebtoken_1.default.sign({ user: { id: user.id, email: user.email } }, "key") }));
+            req.login(user, { session: false }, error => error ? next(error) : res.json({ "user": { id: user._id, email: user.email, name: user.name },
+                "token": jsonwebtoken_1.default.sign({ user: { id: user._id, email: user.email } }, "key")
+            }));
         }
         catch (error) {
             return next(error);

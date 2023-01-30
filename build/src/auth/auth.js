@@ -38,7 +38,8 @@ passport_1.default.use("login", new localStrategy({
             if (email === process.env.PUBLIC_EMAIL && password === process.env.PUBLIC_PASSWORD) {
                 const user = {
                     _id: 0,
-                    email: process.env.PUBLIC_EMAIL
+                    email: process.env.PUBLIC_EMAIL,
+                    name: "Alvaro G."
                 };
                 return done(null, user, { message: "User logged in" });
             }
@@ -47,11 +48,10 @@ passport_1.default.use("login", new localStrategy({
             }
         }
         else {
-            return done(null, { _id: currentUser._id, email: currentUser.email }, { message: "User logged in" });
+            return done(null, { _id: currentUser._id, email: currentUser.email, name: currentUser.name }, { message: "User logged in" });
         }
     }
     catch (error) {
-        console.log(error);
         return done(error);
     }
 })));

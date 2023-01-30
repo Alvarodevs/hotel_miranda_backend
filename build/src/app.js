@@ -55,6 +55,7 @@ app.listen(process.env.PORT, () => {
 });
 //error handler
 app.use((err, req, res, next) => {
+    res.status(404).send({ error: err.message });
     res.status(500).send({ error: err.message });
 });
 exports.default = app;
