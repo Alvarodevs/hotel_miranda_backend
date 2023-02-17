@@ -39,7 +39,8 @@ jobs:
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-      ATLAS_URL: ${{secrets.ATLAS_URL}}
+      env:
+        ATLAS_URL: ${{secrets.ATLAS_URL}}
 
     steps:
       - name: Download artifact from build job
