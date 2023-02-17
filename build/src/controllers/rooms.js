@@ -36,7 +36,7 @@ const postRooms = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     }
     catch (error) {
         res.status(400).send({
-            message: "Something went wrong, check room details.",
+            message: error,
         });
     }
     yield (0, mongoConnection_1.disconnect)();

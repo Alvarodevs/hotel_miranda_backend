@@ -30,7 +30,7 @@ export const postRooms = async (
       res.status(201).json({ postedRoom });
    } catch (error) {
       res.status(400).send({
-         message: "Something went wrong, check room details.",
+         message: error,
       });
    }
    await disconnect();
