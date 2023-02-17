@@ -39,8 +39,6 @@ jobs:
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-      env:
-        ATLAS_URL: ${{secrets.ATLAS_URL}}
 
     steps:
       - name: Download artifact from build job
@@ -56,4 +54,5 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_07C7B0206113435280F5BA91FE869A5D }}
           package: .
-        env: ${{secrets.ATLAS_URL}}
+        env:
+          ATLAS_URL: ${{secrets.ATLAS_URL}}
