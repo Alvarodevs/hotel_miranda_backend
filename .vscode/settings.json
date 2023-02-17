@@ -1,5 +1,0 @@
-{
-   "compile-hero.disable-compile-files-on-did-save-code": true,
-   "appService.defaultWebAppToDeploy": "/subscriptions/cbe998e0-4b19-4e42-bda4-9d9d713535eb/appservices/subscriptions/cbe998e0-4b19-4e42-bda4-9d9d713535eb/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/miranda-backend",
-   "appService.deploySubpath": "."
-}
